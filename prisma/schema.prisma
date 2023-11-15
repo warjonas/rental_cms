@@ -1,0 +1,212 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User{
+  id                   String @id @default(uuid())
+  email                String 
+  firstName            String @default("")
+  lastName             String @default("")
+  hashedPassword       String
+  stores               UserStore[] 
+  role                 String
+  
+
+
+  @@unique([email])
+
+}
+
+model StoreBank{
+  id                    String @id @default(uuid())
+  name                  String
+  accountNo             String
+  accountType           String
+  branchCode            String
+
+  store                 Store?
+   
+
+}
+
+
+model UserStore{
+  id                    String @id  @default(uuid())  
+
+  userId                String
+  user                  User @relation(fields: [userId],  references: [id], onDelete: Cascade) 
+
+  storeId               String
+  store                 Store @relation(fields: [storeId],  references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([storeId])
+  @@unique([userId,storeId])
+}
+
+model Store{
+  id                    String    @id @default(uuid())
+  name                  String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime  @updatedAt
+  
+  users                 UserStore[]
+  sizes                 Size[]  @relation("StoreToSize")
+  colours               Colour[]  @relation("StoreToColours")
+  products              Product[] @relation("StoreToProduct")
+  billboards            Billboard[] @relation("StoreToBillboard")
+  categories            Category[] @relation("StoreToCategory")
+  quotes                Quote[] @relation("StoreToOrder")
+
+  bankId                String?
+  bank                  StoreBank? @relation(fields: [bankId], references: [id])
+
+  @@unique([bankId])
+
+}
+
+model Billboard {
+  id                    String @id @default(uuid())
+  storeId               String
+  store                 Store @relation("StoreToBillboard", fields: [storeId], references: [id])
+  label                 String
+  imageUrl              String
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  categories            Category[]
+
+
+  @@index([storeId])
+
+
+}
+
+model Category {
+  id                    String @id @default(uuid())
+  name                  String
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime  @updatedAt
+
+
+  storeId               String
+  store                 Store @relation("StoreToCategory", fields: [storeId],  references: [id])
+  billboardId           String
+  billboard             Billboard @relation(fields: [billboardId],  references: [id])
+  products              Product[] @relation("CategoryToProduct")
+     
+
+  @@index([storeId])
+  @@index([billboardId])
+
+}
+
+model Size{
+  id                    String @id @default(uuid())
+  name                  String
+  value                 String
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  
+  storeId               String
+  store                 Store @relation("StoreToSize", fields: [storeId],  references: [id])
+  products               Product[]
+
+  @@index([storeId])
+  
+}
+
+model Colour{
+  id                    String @id @default(uuid())
+  name                  String
+  value                 String
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  
+  storeId               String
+  store                 Store @relation("StoreToColours", fields: [storeId],  references: [id])
+  products              Product[]
+
+  @@index([storeId])
+  
+}
+
+model Product{
+  id                    String @id @default(uuid())
+  name                  String
+  price                 Decimal
+  isFeatured            Boolean
+  isArchived            Boolean
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime  @updatedAt
+  qty                   Decimal
+  images                Image[]
+  quoteItem             QuoteItem[]
+
+  sizeId                String
+  size                  Size @relation(fields: [sizeId], references: [id])
+  storeId               String
+  store                 Store @relation("StoreToProduct", fields: [storeId],  references: [id])
+  categoryId            String
+  category              Category @relation("CategoryToProduct", fields: [categoryId],  references: [id])
+  colourId              String
+  colour                Colour @relation(fields: [colourId],  references: [id])
+  
+  
+
+  @@index([storeId])
+  @@index([sizeId])
+  @@index([categoryId])
+  @@index([colourId])
+
+}
+
+model Image{
+  id                    String  @id @default(uuid())
+  url                   String
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  productId             String
+  product               Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  
+  @@index([productId])
+}
+
+model Quote{
+  id                    String @id 
+  Name                  String  @default("")
+  isPaid                Boolean @default(false)
+  phone                 String  @default("")
+  address               String  @default("")
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+
+  orderItems            QuoteItem[]
+  storeId               String
+  store                 Store @relation("StoreToOrder", fields: [storeId],  references: [id])
+  
+
+  @@index([storeId])
+}
+
+model QuoteItem{
+  id                    String @id  @default(uuid())  
+  qty                   Decimal
+
+  quoteId               String
+  quote                 Quote @relation(fields: [quoteId],  references: [id]) 
+
+  productId             String
+  product               Product @relation(fields: [productId],  references: [id], onDelete: Cascade)
+
+  @@index([quoteId])
+  @@index([productId])
+}

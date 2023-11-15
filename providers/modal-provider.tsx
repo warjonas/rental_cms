@@ -1,0 +1,26 @@
+'use client';
+
+import { StoreModal } from '@/components/modals/store-modal';
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
+
+export const ModalProvider = () => {
+  const [isMounted, setIsMounted] = useState(false);
+  const params = useParams();
+
+  const storeId = params.storeId.toString();
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    return null;
+  }
+
+  return (
+    <>
+      <StoreModal />
+    </>
+  );
+};

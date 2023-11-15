@@ -1,0 +1,60 @@
+import prismadb from '@/lib/prismadb';
+import { auth } from '@clerk/nextjs';
+import { redirect } from 'next/navigation';
+import SettingsForm from './components/settings-form';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { getCurrentUser } from '@/actions/getCurrentUser';
+import { Separator } from '@/components/ui/separator';
+import { UserClient } from './components/client';
+import { getStoreUsers } from '@/actions/getUsersPerStore';
+import { UserColumn } from './components/columns';
+
+interface SettingsPageProps {
+  params: {
+    storeId: string;
+  };
+}
+
+const SettingsPage: React.FC<SettingsPageProps> = async ({ params }) => {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user?.email) {
+    redirect('/sign-in');
+  }
+
+  const user = await getCurrentUser(session?.user?.email);
+  const storeUsers = await getStoreUsers(params.storeId);
+
+  const formattedUsers: UserColumn[] = storeUsers.map((user) => ({
+    id: user.id,
+    name: user.firstName + ' ' + user.lastName,
+    userType: user.role,
+    email: user.email,
+  }));
+
+  const store = await prismadb.store.findFirst({
+    where: {
+      id: params.storeId,
+    },
+    include: {
+      bank: true,
+    },
+  });
+
+  if (!store) {
+    redirect('/');
+  }
+
+  return (
+    <div className="flex-col ">
+      <div className="flex-1 spac-y-4 p-8 pt-6">
+        <SettingsForm initialData={store} role={user?.role} bank={store.bank} />
+        <Separator className="my-4" />
+        <UserClient data={formattedUsers} />
+      </div>
+    </div>
+  );
+};
+
+export default SettingsPage;
