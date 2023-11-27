@@ -5,8 +5,6 @@ import { ModeToggle } from './theme-toggle';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { getCurrentUser } from '@/actions/getCurrentUser';
-import { LogOutIcon } from 'lucide-react';
-import { signOut } from 'next-auth/react';
 import { SignOutBtn } from './ui/signOutBtn';
 
 const Navbar = async () => {
@@ -30,7 +28,12 @@ const Navbar = async () => {
         )}
 
         <MainNav className="mx-6" />
+
         <div className="ml-auto flex items-center space-x-4">
+          <h1>
+            <b>Signed in as:</b> {user?.firstName} {user?.lastName} (
+            {user?.role})
+          </h1>
           <ModeToggle />
           <SignOutBtn />
         </div>

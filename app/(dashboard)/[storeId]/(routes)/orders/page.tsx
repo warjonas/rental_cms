@@ -3,23 +3,16 @@ import { OrderClient } from './components/client';
 import prismadb from '@/lib/prismadb';
 import { OrderColumn } from './components/columns';
 import { formatter } from '@/lib/utils';
+import { getOrders } from '@/actions/getOrders';
 
 const OrderPage = async ({ params }: { params: { storeId: string } }) => {
-  const orders = await prismadb.quote.findMany({
-    where: {
-      storeId: params.storeId,
-    },
-    include: {
-      orderItems: {
-        include: {
-          product: true,
-        },
-      },
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+  const orders = await getOrders(params.storeId);
+
+  // formatter.format(
+  //     item.orderItems.reduce((total, item) => {
+  //       return total + Number(item.product.price);
+  //     }, 0)
+  //   ),
 
   const formattedOrders: OrderColumn[] = orders.map((item) => ({
     id: item.id,
@@ -30,11 +23,7 @@ const OrderPage = async ({ params }: { params: { storeId: string } }) => {
     products: item.orderItems
       .map((orderItem) => orderItem.product.name)
       .join(', '),
-    totalPrice: formatter.format(
-      item.orderItems.reduce((total, item) => {
-        return total + Number(item.product.price);
-      }, 0)
-    ),
+    totalPrice: formatter.format(Number(item.totalPrice)),
     createdAt: format(item.createdAt, 'MMMM do, yyyy'),
   }));
   return (

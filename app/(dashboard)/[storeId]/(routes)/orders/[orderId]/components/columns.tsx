@@ -2,24 +2,32 @@
 
 import { ColumnDef } from '@tanstack/react-table';
 import { CellAction } from './cell-action';
+import Image from 'next/image';
+import { formatter } from '@/lib/utils';
 
 export type ProductColumn = {
   id: string;
+  image: string;
   name: string;
-  isFeatured: boolean;
-  isArchived: boolean;
-  price: string;
+  price: number;
   category: string;
-  colourId: string;
   colour: string;
-  createdAt: string;
   qty: number;
 };
 
 export const columns: ColumnDef<ProductColumn>[] = [
   {
-    accessorKey: 'id',
-    header: 'Product Code',
+    accessorKey: 'image',
+    header: '',
+    cell: ({ row }) => (
+      <Image
+        src={row.original.image}
+        alt="product"
+        width={1920}
+        height={1080}
+        className="h-20 w-20"
+      />
+    ),
   },
   {
     accessorKey: 'name',
@@ -27,15 +35,12 @@ export const columns: ColumnDef<ProductColumn>[] = [
   },
   {
     accessorKey: 'price',
-    header: 'Unit Price',
+    header: 'Price',
+    cell: ({ row }) => <p>{formatter.format(row.original.price)}</p>,
   },
   {
     accessorKey: 'category',
     header: 'Category',
-  },
-  {
-    accessorKey: 'size',
-    header: 'Size',
   },
   {
     accessorKey: 'colour',
@@ -45,31 +50,17 @@ export const columns: ColumnDef<ProductColumn>[] = [
         {row.original.colour}
         <div
           className="h-6 w-6 rounded-full border"
-          style={{ backgroundColor: row.original.colourId }}
+          style={{ backgroundColor: row.original.colour }}
         />
       </div>
     ),
   },
   {
     accessorKey: 'qty',
-    header: 'Quantity',
+    header: 'Max Qty',
     cell: ({ row }) => <div>{row.original.qty}</div>,
   },
 
-  {
-    accessorKey: 'isArchived',
-    header: 'Archived',
-    cell: ({ row }) => (
-      <div>{row.original.isArchived === true ? <p>Yes</p> : <p>No</p>}</div>
-    ),
-  },
-  {
-    accessorKey: 'isFeatured',
-    header: 'Featured',
-    cell: ({ row }) => (
-      <div>{row.original.isFeatured === true ? <p>Yes</p> : <p>No</p>}</div>
-    ),
-  },
   {
     id: 'actions',
     cell: ({ row }) => <CellAction data={row.original} />,

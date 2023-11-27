@@ -75,7 +75,8 @@ model Store{
 
 model Billboard {
   id                    String @id @default(uuid())
-  storeId               String
+  storeId               String  
+  path                  String @default("")
   store                 Store @relation("StoreToBillboard", fields: [storeId], references: [id])
   label                 String
   imageUrl              String
@@ -188,6 +189,7 @@ model Quote{
   address               String  @default("")
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
+  totalPrice            Decimal
 
   orderItems            QuoteItem[]
   storeId               String
@@ -195,17 +197,19 @@ model Quote{
   
 
   @@index([storeId])
+  @@unique([id])
 }
 
 model QuoteItem{
   id                    String @id  @default(uuid())  
+  unitPrice             Decimal
   qty                   Decimal
 
   quoteId               String
-  quote                 Quote @relation(fields: [quoteId],  references: [id]) 
+  quote                 Quote @relation(fields: [quoteId],  references: [id], onDelete: Cascade) 
 
   productId             String
-  product               Product @relation(fields: [productId],  references: [id], onDelete: Cascade)
+  product               Product @relation(fields: [productId],  references: [id])
 
   @@index([quoteId])
   @@index([productId])

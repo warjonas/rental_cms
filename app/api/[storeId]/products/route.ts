@@ -76,8 +76,26 @@ export async function POST(
       return new NextResponse('Unauthorized', { status: 403 });
     }
 
+    const category = await prismadb.category.findFirst({
+      where: {
+        id: categoryId,
+      },
+    });
+
+    const d = new Date();
+
+    const prodId =
+      category?.name.substring(0, 3).toUpperCase() +
+      '-' +
+      d.getMonth().toString() +
+      d.getFullYear().toString() +
+      '-' +
+      d.getMinutes().toString() +
+      d.getSeconds().toString();
+
     const product = await prismadb.product.create({
       data: {
+        id: prodId,
         name,
         price,
         categoryId,

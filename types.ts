@@ -14,9 +14,20 @@ export interface Product {
   id: string;
   name: string;
   colour: string;
-  images: Image[];
-  price: string;
   qty: string;
+  unitPrice: number;
+  totalPrice: number;
+
+  // image: string
+}
+
+export interface Quote {
+  id: string;
+  Name: string;
+  isPaid: boolean;
+  phone: string;
+  address: string;
+  totalPrice: number;
 }
 
 export interface Image {

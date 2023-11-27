@@ -49,13 +49,7 @@ export const MainNav = ({
       label: 'Orders',
       active: pathname === `/${params.storeId}/orders`,
     },
-    {
-      href: `/${params.storeId}/invoices`,
-      label: 'Invoices',
-      active:
-        pathname === `/${params.storeId}/invoices` ||
-        pathname === `/${params.storeId}/invoices/new`,
-    },
+
     {
       href: `/${params.storeId}/settings`,
       label: 'Settings',

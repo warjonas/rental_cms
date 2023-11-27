@@ -89,18 +89,16 @@ const ProductForm: React.FC<ProductFormProps> = ({
       : {
           name: '',
           images: [],
-          price: 0,
+
           categoryId: '',
           sizeId: '',
           colourId: '',
           isArchived: false,
           isFeatured: false,
-          qty: 0,
         },
   });
 
   const onSubmit = async (data: ProductFormValues) => {
-    console.log('Submit');
     try {
       setLoading(true);
       if (initialData) {
@@ -210,7 +208,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
               name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-bold">Price</FormLabel>
+                  <FormLabel className="font-bold">Unit Price</FormLabel>
                   <FormControl>
                     <Input disabled={loading} placeholder="10.00" {...field} />
                   </FormControl>

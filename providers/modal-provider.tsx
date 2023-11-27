@@ -6,9 +6,6 @@ import { useEffect, useState } from 'react';
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
-  const params = useParams();
-
-  const storeId = params.storeId.toString();
 
   useEffect(() => {
     setIsMounted(true);

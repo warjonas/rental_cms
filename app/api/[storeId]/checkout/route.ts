@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 
 // import { stripe } from '@/lib/stripe';
 import prismadb from '@/lib/prismadb';
+import { QuoteItem } from '@prisma/client';
+import { Product } from '@/types';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -18,69 +20,50 @@ export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
-  const { productIds } = await req.json();
+  const { values, products } = await req.json();
+  const items = products.items;
 
-  if (!productIds || productIds.lenght === 0) {
-    return new NextResponse("Product Id's are required", { status: 400 });
+  if (!products || products.length === 0) {
+    return new NextResponse("Product's are required", { status: 400 });
   }
 
-  const products = await prismadb.product.findMany({
-    where: {
-      id: {
-        in: productIds,
-      },
-    },
-  });
+  const d = new Date();
 
-  const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
+  const quoteId =
+    'INV-' +
+    d.getMonth().toString() +
+    d.getFullYear().toString() +
+    '-' +
+    d.getMinutes().toString() +
+    d.getSeconds().toString();
 
-  products.forEach((product) => {
-    line_items.push({
-      quantity: 1,
-      price_data: {
-        currency: 'ZAR',
-        product_data: {
-          name: product.name,
+  try {
+    const quote = await prismadb.quote.create({
+      data: {
+        id: quoteId,
+        storeId: params.storeId,
+        isPaid: values.isPaid,
+        totalPrice: values.totalPrice,
+        Name: values.name,
+        phone: values.phone,
+        address: values.address,
+        orderItems: {
+          create: items.map((item: Product) => ({
+            unitPrice: item.unitPrice,
+            qty: item.qty,
+
+            product: {
+              connect: {
+                id: item.id,
+              },
+            },
+          })),
         },
-        unit_amount: product.price.toNumber() * 100,
       },
     });
-  });
-
-  const order = await prismadb.quote.create({
-    data: {
-      storeId: params.storeId,
-      isPaid: false,
-      orderItems: {
-        create: productIds.map((productId: string) => ({
-          product: {
-            connect: {
-              id: productId,
-            },
-          },
-        })),
-      },
-    },
-  });
-
-  // const session = await stripe.checkout.sessions.create({
-  //   line_items,
-  //   mode: 'payment',
-  //   billing_address_collection: 'required',
-  //   phone_number_collection: {
-  //     enabled: true,
-  //   },
-  //   success_url: `${process.env.NEXT_PUBLIC_FRONTEND_STORE_URL}/cart?success=1`,
-  //   cancel_url: `${process.env.NEXT_PUBLIC_FRONTEND_STORE_URL}/cart?cancelled=1`,
-  //   metadata: {
-  //     orderId: order.id,
-  //   },
-  // });
-
-  return NextResponse.json(
-    // { url: session.url },
-    {
-      headers: corsHeaders,
-    }
-  );
+    return NextResponse.json(quote);
+  } catch (error) {
+    console.log('[QUOTE_POST]', error);
+    return new NextResponse('Internal Error', { status: 400 });
+  }
 }
