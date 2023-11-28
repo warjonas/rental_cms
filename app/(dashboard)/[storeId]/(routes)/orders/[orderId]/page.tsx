@@ -49,7 +49,7 @@ const QuotePage = async ({
       <div className="flex-1 space-y-4 p-8 pt-6">
         <QuoteForm
           items={formattedItems}
-          initialData={quote}
+          initialData={items.length !== 0 ? quote : null}
           products={formattedProducts}
         />
       </div>

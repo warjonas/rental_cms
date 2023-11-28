@@ -44,7 +44,7 @@ export async function PATCH(
     });
 
     const body = await req.json();
-    const { label, imageUrl } = body;
+    const { label, imageUrl, subtext } = body;
 
     if (!label) {
       return new NextResponse('Label is required', { status: 400 });
@@ -80,6 +80,7 @@ export async function PATCH(
       data: {
         label,
         imageUrl,
+        subtext,
       },
     });
 

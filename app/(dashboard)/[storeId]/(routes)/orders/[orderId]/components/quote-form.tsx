@@ -16,7 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
+
 import { toast } from 'react-hot-toast';
 import { Checkbox } from '@/components/ui/checkbox';
 import useQuoteStore from '@/hooks/use-quote';
@@ -31,7 +31,7 @@ import { useParams } from 'next/navigation';
 import { Quote } from '@/types';
 import { Product } from '@/types';
 import { useRouter } from 'next/navigation';
-import { ObjectType } from '@clerk/nextjs/server';
+import axios from 'axios';
 
 export const revalidate = true;
 
@@ -106,24 +106,24 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
       let response;
       values.totalPrice = totalPrice;
 
-      console.log(initialData === null);
+      if (initialData === null) {
+        response = await axios.post(`/api/${params.storeId}/checkout`, {
+          values,
+          products: quoteItems,
+        });
+      } else {
+        response = await axios.patch(
+          `/api/${params.storeId}/checkout/${params.orderId}`,
+          {
+            values,
+            products: quoteItems,
+          }
+        );
+      }
 
-      // if (initialData?.id === null) {
-      //   response = await axios.post(`/api/${params.storeId}/checkout`, {
-      //     values,
-      //     products: quoteItems,
-      //   });
-      // } else {
-      //   response = await axios.patch(
-      //     `/api/${params.storeId}/checkout/${params.orderId}`,
-      //     {
-      //       values,
-      //       products: quoteItems,
-      //     }
-      //   );
-      // }
+      router.refresh();
 
-      // router.replace(`/${params.storeId}/orders`);
+      router.push(`/${params.storeId}/orders`);
     } catch (error) {
       toast.error('Something Went Wrong!');
     } finally {
@@ -270,7 +270,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                   disabled={loading || quoteItems.items.length === 0}
                   type="submit"
                 >
-                  {initialData ? 'Continue' : 'Update'}
+                  {!initialData ? 'Continue' : 'Update'}
                 </Button>
               </div>
             </form>

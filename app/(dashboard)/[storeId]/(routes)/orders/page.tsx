@@ -5,6 +5,8 @@ import { OrderColumn } from './components/columns';
 import { formatter } from '@/lib/utils';
 import { getOrders } from '@/actions/getOrders';
 
+export const revalidate = true;
+
 const OrderPage = async ({ params }: { params: { storeId: string } }) => {
   const orders = await getOrders(params.storeId);
 

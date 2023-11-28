@@ -75,13 +75,18 @@ model Store{
 
 model Billboard {
   id                    String @id @default(uuid())
-  storeId               String  
   path                  String @default("")
-  store                 Store @relation("StoreToBillboard", fields: [storeId], references: [id])
   label                 String
+  subtext               String @default("")
   imageUrl              String
+
+
   createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
+  updatedAt             DateTime  @updatedAt  
+
+  storeId               String 
+  store                 Store @relation("StoreToBillboard", fields: [storeId], references: [id]) 
+  
   categories            Category[]
 
 

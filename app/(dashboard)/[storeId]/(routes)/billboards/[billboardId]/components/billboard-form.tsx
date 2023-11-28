@@ -32,6 +32,7 @@ interface BillboardFormProps {
 const formSchema = z.object({
   label: z.string().min(1),
   imageUrl: z.string().min(1),
+  subtext: z.string().min(1),
 });
 
 type BillboardFormValues = z.infer<typeof formSchema>;
@@ -57,6 +58,7 @@ const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
     defaultValues: initialData || {
       label: '',
       imageUrl: '',
+      subtext: '',
     },
   });
 
@@ -154,6 +156,25 @@ const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
                     <Input
                       disabled={loading}
                       placeholder="Billboard label"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="grid grid-cols-3 gap-8">
+            <FormField
+              control={form.control}
+              name="subtext"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-bold">Subtext</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={loading}
+                      placeholder="Billboard subtext"
                       {...field}
                     />
                   </FormControl>
