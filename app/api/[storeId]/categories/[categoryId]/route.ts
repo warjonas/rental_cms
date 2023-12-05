@@ -47,7 +47,7 @@ export async function PATCH(
 
     const body = await req.json();
 
-    const { name, billboardId } = body;
+    const { name, billboardId, coverPhotoUrl } = body;
 
     if (!name) {
       return new NextResponse('Category Name is required', { status: 400 });
@@ -81,6 +81,7 @@ export async function PATCH(
         id: params.categoryId,
       },
       data: {
+        coverPhotoUrl,
         name,
         billboardId,
       },

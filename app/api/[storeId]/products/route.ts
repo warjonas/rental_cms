@@ -32,6 +32,7 @@ export async function POST(
       isFeatured,
       isArchived,
       qty,
+      description,
     } = body;
 
     if (!name) {
@@ -98,6 +99,7 @@ export async function POST(
         id: prodId,
         name,
         price,
+        description,
         categoryId,
         colourId,
         sizeId,

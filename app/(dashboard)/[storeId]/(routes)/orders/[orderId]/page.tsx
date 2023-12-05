@@ -38,9 +38,29 @@ const QuotePage = async ({
   const quote: Quote = {
     id: items[0]?.quote?.id,
     phone: items[0]?.quote?.phone,
-    Name: items[0]?.quote?.Name,
+    firstName: items[0]?.quote?.firstName,
+    lastName: items[0]?.quote?.lastName,
+    idNumber: items[0]?.quote?.idNumber,
+    emailAddress: items[0]?.quote?.emailAddress,
+
     isPaid: items[0]?.quote?.isPaid,
-    address: items[0]?.quote?.address,
+    deliveryAddressLine1: items[0]?.quote?.deliveryAddressLine1,
+    deliveryAddressLine2: items[0]?.quote?.deliveryAddressLine2,
+    deliveryAddressSuburb: items[0]?.quote?.deliveryAddressSuburb,
+    deliveryAddressCity: items[0]?.quote?.deliveryAddressCity,
+    deliveryPhoneNumber: items[0]?.quote?.deliveryPhoneNumber,
+
+    thirdPartyAddressLine1: items[0]?.quote?.thirdPartyAddressLine1,
+    thirdPartyAddressLine2: items[0]?.quote?.thirdPartyAddressLine2,
+
+    thirdPartyAddressCity: items[0]?.quote?.thirdPartyAddressCity,
+    thirdPartyAddressSuburb: items[0]?.quote?.thirdPartyAddressSuburb,
+
+    thirdPartyContactPerson: items[0]?.quote?.thirdPartyContactPerson,
+    thirdPartyPhoneNumber: items[0]?.quote?.thirdPartyPhoneNumber,
+    confirmationPayment: items[0]?.quote?.confirmationPayment,
+    confirmationTerms: items[0]?.quote?.confirmationTerms,
+
     totalPrice: items[0]?.quote?.totalPrice.toNumber(),
   };
 

@@ -22,7 +22,7 @@ export async function POST(
 
     const body = await req.json();
 
-    const { name, billboardId } = body;
+    const { name, billboardId, coverPhotoUrl } = body;
 
     if (!name) {
       return new NextResponse('Billboard Name is required', { status: 400 });
@@ -52,6 +52,7 @@ export async function POST(
     }
     const category = await prismadb.category.create({
       data: {
+        coverPhotoUrl,
         name,
         billboardId,
         storeId: params.storeId,

@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
+import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Category, Colour, Image, Product, Size } from '@prisma/client';
 import axios from 'axios';
@@ -46,6 +47,7 @@ interface ProductFormProps {
 
 const formSchema = z.object({
   name: z.string().min(1),
+  description: z.string().min(1).max(190),
   images: z.object({ url: z.string() }).array(),
   price: z.coerce.number().min(1),
   categoryId: z.string().min(1),
@@ -89,7 +91,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
       : {
           name: '',
           images: [],
-
+          description: '',
           categoryId: '',
           sizeId: '',
           colourId: '',
@@ -321,6 +323,26 @@ const ProductForm: React.FC<ProductFormProps> = ({
                       ))}
                     </SelectContent>
                   </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-bold">
+                    Product Description
+                  </FormLabel>
+                  <FormControl>
+                    <Textarea
+                      disabled={loading}
+                      placeholder="Dimensions, material, etc."
+                      {...field}
+                      maxLength={190}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

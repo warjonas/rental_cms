@@ -1,21 +1,22 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 async function main() {
-  const hashedPassword = await bcrypt.hash('JellyBean#28', 10);
+  const password = process.env.PASSWORD;
 
-  const user = await prisma.user.create({
-    data: {
-      firstName: 'Warren',
-      lastName: 'Jonas',
-      email: 'admin@skywalkersoftware.tech',
-      hashedPassword,
-      role: 'ADMIN',
-    },
-  });
-
-  console.log({ user });
+  if (password) {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await prisma.user.create({
+      data: {
+        firstName: 'Warren',
+        lastName: 'Jonas',
+        email: 'admin@skywalkersoftware.tech',
+        hashedPassword,
+        role: 'ADMIN',
+      },
+    });
+  }
 }
 main()
   .then(async () => {

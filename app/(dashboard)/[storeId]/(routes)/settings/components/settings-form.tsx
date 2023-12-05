@@ -18,13 +18,14 @@ import { useOrigin } from '@/hooks/use-origin';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Store, StoreBank } from '@prisma/client';
 import axios from 'axios';
-import { Banknote, BanknoteIcon, PencilIcon, Trash } from 'lucide-react';
+import { BanknoteIcon, PencilIcon, Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
 import BankingDetails from './banking-details';
+import ImageUpload from '@/components/ui/image-upload';
 
 interface SettingsFormProps {
   initialData: Store;
@@ -34,6 +35,7 @@ interface SettingsFormProps {
 
 const formSchema = z.object({
   name: z.string().min(1),
+  logoUrl: z.string().min(1),
 });
 
 type SettingsFormValues = z.infer<typeof formSchema>;
@@ -112,6 +114,24 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
+          <FormField
+            control={form.control}
+            name="logoUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-bold">Business Logo</FormLabel>
+                <FormControl>
+                  <ImageUpload
+                    value={field.value ? [field.value] : []}
+                    disabled={loading}
+                    onChange={(url) => field.onChange(url)}
+                    onRemove={() => field.onChange('')}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}

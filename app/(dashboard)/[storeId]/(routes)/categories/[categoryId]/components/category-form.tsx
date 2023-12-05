@@ -11,6 +11,7 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Heading } from '@/components/ui/heading';
+import ImageUpload from '@/components/ui/image-upload';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -37,6 +38,7 @@ interface CategoryFormProps {
 }
 
 const formSchema = z.object({
+  coverPhotoUrl: z.string().min(1),
   name: z.string().min(1),
   billboardId: z.string().min(1),
 });
@@ -65,6 +67,7 @@ const BillboardForm: React.FC<CategoryFormProps> = ({
   const form = useForm<CategoryFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
+      coverPhotoUrl: '',
       name: '',
       billboardId: '',
     },
@@ -138,6 +141,24 @@ const BillboardForm: React.FC<CategoryFormProps> = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full"
         >
+          <FormField
+            control={form.control}
+            name="coverPhotoUrl"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="font-bold">Cover Image</FormLabel>
+                <FormControl>
+                  <ImageUpload
+                    value={field.value ? [field.value] : []}
+                    disabled={loading}
+                    onChange={(url) => field.onChange(url)}
+                    onRemove={() => field.onChange('')}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <div className="grid grid-cols-3 gap-8">
             <FormField
               control={form.control}

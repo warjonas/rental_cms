@@ -18,9 +18,9 @@ const OrderPage = async ({ params }: { params: { storeId: string } }) => {
 
   const formattedOrders: OrderColumn[] = orders.map((item) => ({
     id: item.id,
-    name: item.Name,
+    name: item.firstName + ' ' + item.lastName,
     phone: item.phone,
-    address: item.address,
+    address: item.deliveryAddressLine1 + ', ' + item.deliveryAddressSuburb,
     isPaid: item.isPaid,
     products: item.orderItems
       .map((orderItem) => orderItem.product.name)

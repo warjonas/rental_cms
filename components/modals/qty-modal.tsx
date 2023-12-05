@@ -62,7 +62,7 @@ export const QtyModal: React.FC<QtyModalProps> = ({
     };
 
     try {
-      quote.addItem(item);
+      quote.addItem(item, false);
       onClose();
     } catch (e) {
       console.log(e);

@@ -5,7 +5,7 @@ import { toast } from 'react-hot-toast';
 
 interface QuoteState {
   items: Product[];
-  addItem: (data: Product, update: Boolean) => void;
+  addItem: (data: Product, update?: Boolean) => void;
   removeItem: (id: string) => void;
   removeAll: () => void;
 }

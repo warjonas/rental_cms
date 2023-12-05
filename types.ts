@@ -10,6 +10,12 @@ export interface Category {
   billboard: Billboard;
 }
 
+export interface Question {
+  id: string;
+  question: string;
+  answer: string;
+}
+
 export interface Product {
   id: string;
   name: string;
@@ -23,11 +29,27 @@ export interface Product {
 
 export interface Quote {
   id: string;
-  Name: string;
+  firstName: string;
+  lastName: string;
+  idNumber: string;
+  emailAddress: string;
   isPaid: boolean;
+
   phone: string;
-  address: string;
   totalPrice: number;
+  deliveryAddressLine1: string;
+  deliveryAddressLine2: string;
+  deliveryAddressCity: string;
+  deliveryAddressSuburb: string;
+  deliveryPhoneNumber: string;
+  thirdPartyAddressLine1: string;
+  thirdPartyAddressLine2: string;
+  thirdPartyAddressCity: string;
+  thirdPartyAddressSuburb: string;
+  thirdPartyContactPerson: string;
+  thirdPartyPhoneNumber: string;
+  confirmationPayment: boolean;
+  confirmationTerms: boolean;
 }
 
 export interface Image {

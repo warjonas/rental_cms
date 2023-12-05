@@ -1,6 +1,7 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import prismadb from '@/lib/prismadb';
 import { Product } from '@/types';
+import { format } from 'date-fns';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 
@@ -98,9 +99,25 @@ export async function PATCH(
         storeId: params.storeId,
         isPaid: values.isPaid,
         totalPrice: values.totalPrice,
-        Name: values.name,
-        phone: values.phone,
-        address: values.address,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        emailAddress: values.emailAddress,
+        idNumber: values.idNumber,
+        eventDate: format(values.eventDate, 'PPP'),
+        phone: values.phoneNumber,
+        deliveryAddressLine1: values.deliveryAddressLine1,
+        deliveryAddressLine2: values.deliveryAddressLine2,
+        deliveryAddressCity: values.deliveryAddressCity,
+        deliveryAddressSuburb: values.deliveryAddressSuburb,
+        deliveryPhoneNumber: values.deliveryPhoneNumber,
+        thirdPartyAddressLine1: values.thirdPartyAddressLine1,
+        thirdPartyAddressLine2: values.thirdPartyAddressLine2,
+        thirdPartyAddressCity: values.thirdPartyAddressCity,
+        thirdPartyAddressSuburb: values.thirdPartyAddressSuburb,
+        thirdPartyPhoneNumber: values.thirdPartyPhoneNumber,
+        thirdPartyContactPerson: values.thirdPartyContactPerson,
+        confirmationPayment: values.confirmationPayment,
+        confirmationTerms: values.confirmationTerms,
         orderItems: {
           deleteMany: {},
         },

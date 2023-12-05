@@ -27,11 +27,12 @@ import { QuoteItemModal } from './quote-item-modal';
 
 import { ProductColumn } from './columns';
 import QuoteItem from './quote-item';
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { Quote } from '@/types';
 import { Product } from '@/types';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
+import qs from 'query-string';
 
 export const revalidate = true;
 
@@ -42,12 +43,26 @@ interface QuoteFormProps {
 }
 
 const formSchema = z.object({
-  name: z.string().min(1),
-  phone: z.string().min(1).max(10),
-  address: z.string().min(1),
-  isPaid: z.boolean().default(false).optional(),
-  dueBy: z.string().min(1),
+  firstName: z.string().min(1),
+  lastName: z.string().min(1),
+  idNumber: z.string().max(13).min(13),
+  emailAddress: z.string().email(),
+  phoneNumber: z.string().min(10),
+  deliveryAddressLine1: z.string().min(1),
+  deliveryAddressLine2: z.string().default(''),
+  deliveryAddressCity: z.string().min(1),
+  deliveryAddressSuburb: z.string().min(1),
+  deliveryPhoneNumber: z.string().min(10),
+  thirdPartyAddressLine1: z.string().min(1),
+  thirdPartyAddressLine2: z.string().default(''),
+  thirdPartyAddressCity: z.string().min(1),
+  thirdPartyAddressSuburb: z.string().min(1),
+  thirdPartyContactPerson: z.string().min(1),
+  thirdPartyPhoneNumber: z.string().min(10),
+  confirmationPayment: z.boolean().default(false),
+  confirmationTerms: z.boolean().default(false),
   totalPrice: z.coerce.number().min(1),
+  isPaid: z.boolean().default(false),
 });
 
 export const QuoteForm: React.FC<QuoteFormProps> = ({
@@ -58,6 +73,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
   const quoteItems = useQuoteStore();
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [loading, setLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -84,22 +100,19 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
     defaultValues: initialData
       ? {
           ...initialData,
-          name: initialData?.Name,
+
           totalPrice,
-          dueBy: Date.now().toString(),
         }
       : {
-          name: '',
-          phone: '',
-          address: '',
           isPaid: false,
-          dueBy: Date.now().toString(),
+          confirmationPayment: true,
+          confirmationTerms: true,
+
           totalPrice,
         },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    console.log('submit');
     try {
       setLoading(true);
 
@@ -160,15 +173,41 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
             >
               <FormField
                 control={form.control}
-                name="name"
+                name="firstName"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Customer Name:</FormLabel>
+                    <FormLabel>First Name:*</FormLabel>
+                    <FormControl>
+                      <Input placeholder="John" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Last Name:*</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Doe" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="idNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>ID Number:*</FormLabel>
                     <FormControl>
                       <Input
-                        disabled={loading}
-                        placeholder="Customer name, e.g John Doe"
+                        placeholder="8504126122086"
                         {...field}
+                        maxLength={13}
                       />
                     </FormControl>
                     <FormMessage />
@@ -177,14 +216,27 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
               />
               <FormField
                 control={form.control}
-                name="phone"
+                name="emailAddress"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Phone Number:</FormLabel>
+                    <FormLabel>Email Address:*</FormLabel>
+                    <FormControl>
+                      <Input placeholder="johndoe@email.com" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="phoneNumber"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Phone Number:*</FormLabel>
                     <FormControl>
                       <Input
                         disabled={loading}
-                        placeholder="Customer phone number, e.g 0123456789"
+                        placeholder="0123456789"
                         {...field}
                         maxLength={10}
                       />
@@ -193,23 +245,180 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Customer Address:</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={loading}
-                        placeholder="Customer Address, e.g 31 Normsville Dr"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              <div className="gap-5 flex flex-col md:flex-row w-full lg:gap-x-20 max-md:gap-y-10">
+                <section className="gap-5 flex flex-col lg:w-1/2">
+                  <h1 className={` text-primary text-2xl`}>
+                    Delivery Information
+                  </h1>
+                  <FormField
+                    control={form.control}
+                    name="deliveryAddressLine1"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Address Line 1:*</FormLabel>
+                        <FormControl>
+                          <Input placeholder="24 Joy Str." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="deliveryAddressLine2"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Address Line 2 (optional)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="deliveryAddressSuburb"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Suburb:*</FormLabel>
+                        <FormControl>
+                          <Input placeholder="8504126122086" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="deliveryAddressCity"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>City:*</FormLabel>
+                        <FormControl>
+                          <Input placeholder="johndoe@email.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="deliveryPhoneNumber"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Phone Number:*</FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={loading}
+                            placeholder="0123456789"
+                            {...field}
+                            maxLength={10}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </section>
+
+                <section className="gap-5 flex flex-col max-md:mt-10 lg:w-1/2">
+                  <article className="flex flex-row justify-start">
+                    <h1 className={`text-2xl flex items-end justify-end w-fit`}>
+                      Third Party Information{' '}
+                    </h1>
+                  </article>
+
+                  <FormField
+                    control={form.control}
+                    name="thirdPartyAddressLine1"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Address Line 1:*</FormLabel>
+                        <FormControl>
+                          <Input placeholder="24 Joy Str." {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="thirdPartyAddressLine2"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Address Line 2 (optional)</FormLabel>
+                        <FormControl>
+                          <Input placeholder="" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="thirdPartyAddressSuburb"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Suburb*</FormLabel>
+                        <FormControl>
+                          <Input placeholder="8504126122086" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="thirdPartyAddressCity"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>City:</FormLabel>
+                        <FormControl>
+                          <Input placeholder="johndoe@email.com" {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="thirdPartyContactPerson"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Contact Person Name:*</FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={loading}
+                            placeholder="0123456789"
+                            {...field}
+                            maxLength={10}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="thirdPartyPhoneNumber"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>Phone Number:*</FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={loading}
+                            placeholder="0123456789"
+                            {...field}
+                            maxLength={10}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </section>
+              </div>
               <div className="flex flex-col my-5">
                 <div className="flex justify-between">
                   <h1>Items:</h1>
