@@ -50,28 +50,88 @@ export async function PATCH(
     const { values, products } = await req.json();
     const items = products.items;
 
-    if (!values.name) {
-      return new NextResponse('Quote Name is required', { status: 400 });
-    }
-    if (!values.address) {
-      return new NextResponse('Quote Name is required', { status: 400 });
-    }
-    if (!values.phone) {
-      return new NextResponse('Quote phone is required', { status: 400 });
-    }
-    if (!values.totalPrice) {
-      return new NextResponse('Quote Name is required', { status: 400 });
-    }
-    if (!values.name) {
-      return new NextResponse('Quote Name is required', { status: 400 });
+    if (!products || products.length === 0) {
+      return new NextResponse("Product's are required", { status: 400 });
     }
 
-    if (!items || !items.length) {
-      return new NextResponse('At least 1 Item is required', {
+    if (!values.firstName) {
+      return new NextResponse('First name is required', { status: 400 });
+    }
+
+    if (!values.lastName) {
+      return new NextResponse('Last name is required', { status: 400 });
+    }
+
+    if (!values.idNumber) {
+      return new NextResponse('ID Number is required', { status: 400 });
+    }
+
+    if (!values.emailAddress) {
+      return new NextResponse('Email address is required', { status: 400 });
+    }
+
+    if (!values.phoneNumber) {
+      return new NextResponse('Phone Number name is required', { status: 400 });
+    }
+
+    if (!values.deliveryAddressLine1) {
+      return new NextResponse('Delivery Address Line 1 is required', {
         status: 400,
       });
     }
 
+    if (!values.deliveryAddressCity) {
+      return new NextResponse('Delivery City is required', { status: 400 });
+    }
+
+    if (!values.deliveryAddressSuburb) {
+      return new NextResponse('Suburb is required', { status: 400 });
+    }
+
+    if (!values.deliveryPhoneNumber) {
+      return new NextResponse('Delivery Phone number is required', {
+        status: 400,
+      });
+    }
+
+    if (!values.thirdPartyAddressLine1) {
+      return new NextResponse('Third Party Address Line 1 is required', {
+        status: 400,
+      });
+    }
+
+    if (!values.thirdPartyAddressCity) {
+      return new NextResponse('Third Party City is required', { status: 400 });
+    }
+
+    if (!values.thirdPartyAddressSuburb) {
+      return new NextResponse('Third Party Suburb is required', {
+        status: 400,
+      });
+    }
+
+    if (!values.thirdPartyContactPerson) {
+      return new NextResponse('Third Party Contact Person is required', {
+        status: 400,
+      });
+    }
+
+    if (!values.thirdPartyPhoneNumber) {
+      return new NextResponse('Third Party Phone Number is required', {
+        status: 400,
+      });
+    }
+    if (!values.confirmationPayment) {
+      return new NextResponse('Payment terms agreement is required', {
+        status: 400,
+      });
+    }
+
+    if (!values.confirmationTerms) {
+      return new NextResponse('Terms and Conditions agreement is required', {
+        status: 400,
+      });
+    }
     if (!params.quoteId) {
       return new NextResponse('Quote ID is required', { status: 400 });
     }
@@ -103,7 +163,7 @@ export async function PATCH(
         lastName: values.lastName,
         emailAddress: values.emailAddress,
         idNumber: values.idNumber,
-        eventDate: format(values.eventDate, 'PPP'),
+        // eventDate: new Date(values.eventDate),
         phone: values.phoneNumber,
         deliveryAddressLine1: values.deliveryAddressLine1,
         deliveryAddressLine2: values.deliveryAddressLine2,

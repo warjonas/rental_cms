@@ -72,23 +72,27 @@ export const MainNav = ({
     },
   ];
   return (
-    <nav className={cn('flex items-center space-x-4 lg:space-x-6', className)}>
-      <ul className="flex gap-4">
-        {routes.map((route) => (
-          <Link
-            key={route.href}
-            href={route.href}
-            className={cn(
-              'font-medium transition-colors hover:text-primary',
-              route.active
-                ? 'text-black dark:text-white'
-                : 'text-muted-foreground'
-            )}
-          >
-            {route.label}
-          </Link>
-        ))}
-      </ul>
-    </nav>
+    <>
+      <nav
+        className={cn('flex items-center space-x-4 lg:space-x-6', className)}
+      >
+        <ul className="flex gap-4">
+          {routes.map((route) => (
+            <Link
+              key={route.href}
+              href={route.href}
+              className={cn(
+                'font-medium transition-colors hover:text-primary',
+                route.active
+                  ? 'text-black dark:text-white'
+                  : 'text-muted-foreground'
+              )}
+            >
+              {route.label}
+            </Link>
+          ))}
+        </ul>
+      </nav>
+    </>
   );
 };

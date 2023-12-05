@@ -31,7 +31,7 @@ export const OrderClient: React.FC<OrderClientProps> = ({ data }) => {
         </Button>
       </div>
       <Separator className="my-4" />
-      <DataTable columns={columns} data={data} searchKey="label" />
+      <DataTable columns={columns} data={data} searchKey="id" />
       <Heading title="API" description="API Calls for orders" />
       <Separator className="my-4" />
 

@@ -166,8 +166,6 @@ const ColourForm: React.FC<ColourFormProps> = ({ initialData }) => {
             />
           </div>
           <Button disabled={loading} className="ml-auto" type="submit">
-            {form.getValues().name}
-
             {action}
           </Button>
         </form>

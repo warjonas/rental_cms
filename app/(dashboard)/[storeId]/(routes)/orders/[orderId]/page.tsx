@@ -37,12 +37,12 @@ const QuotePage = async ({
 
   const quote: Quote = {
     id: items[0]?.quote?.id,
-    phone: items[0]?.quote?.phone,
+    phoneNumber: items[0]?.quote?.phone,
     firstName: items[0]?.quote?.firstName,
     lastName: items[0]?.quote?.lastName,
     idNumber: items[0]?.quote?.idNumber,
     emailAddress: items[0]?.quote?.emailAddress,
-
+    eventDate: items[0]?.quote?.eventDate,
     isPaid: items[0]?.quote?.isPaid,
     deliveryAddressLine1: items[0]?.quote?.deliveryAddressLine1,
     deliveryAddressLine2: items[0]?.quote?.deliveryAddressLine2,
@@ -65,8 +65,8 @@ const QuotePage = async ({
   };
 
   return (
-    <div className="flex-col">
-      <div className="flex-1 space-y-4 p-8 pt-6">
+    <div className="flex-col w-full">
+      <div className="flex-1 space-y-4 p-8 pt-6 w-full">
         <QuoteForm
           items={formattedItems}
           initialData={items.length !== 0 ? quote : null}

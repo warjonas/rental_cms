@@ -20,8 +20,8 @@ const ColoursPage = async ({ params }: { params: { storeId: string } }) => {
     createdAt: format(item.createdAt, 'MMMM do, yyyy'),
   }));
   return (
-    <div className="flex-col">
-      <div className="flex-1 space-y-4 p-8 pt-6">
+    <div className="flex-col w-full">
+      <div className="xl:flex-1 space-y-4 p-8 pt-6 w-full">
         <ColourClient data={formattedColours} />
       </div>
     </div>

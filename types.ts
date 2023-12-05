@@ -34,8 +34,8 @@ export interface Quote {
   idNumber: string;
   emailAddress: string;
   isPaid: boolean;
-
-  phone: string;
+  eventDate: Date;
+  phoneNumber: string;
   totalPrice: number;
   deliveryAddressLine1: string;
   deliveryAddressLine2: string;
