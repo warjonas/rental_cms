@@ -23,7 +23,7 @@ const Navbar = async () => {
           <StoreSwitcher items={user?.stores} className="mr-5" />
         ) : (
           <div className="pr-10 pl-5">
-            <h2 className="text-xl">{user?.stores[1].store.name}</h2>
+            <h2 className="text-xl">{user?.stores[0].store.name}</h2>
           </div>
         )}
 

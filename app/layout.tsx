@@ -12,7 +12,7 @@ import AuthProvider from '@/providers/auth-provider';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'Admin Dashboard',
+  title: 'Skywalker Software CMS',
   description: 'Admin Dashboard',
 };
 

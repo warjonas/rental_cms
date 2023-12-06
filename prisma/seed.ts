@@ -9,11 +9,20 @@ async function main() {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await prisma.user.create({
       data: {
-        firstName: 'Warren',
-        lastName: 'Jonas',
-        email: 'admin@skywalkersoftware.tech',
+        firstName: 'Moreen',
+        lastName: 'Fortuin',
+        email: 'moreen@morpies',
         hashedPassword,
-        role: 'ADMIN',
+        role: 'MANAGER',
+        stores: {
+          create: {
+            store: {
+              connect: {
+                id: `${process.env.STORE_ID}`,
+              },
+            },
+          },
+        },
       },
     });
   }

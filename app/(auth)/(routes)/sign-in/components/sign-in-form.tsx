@@ -32,7 +32,6 @@ type SignInFormValues = z.infer<typeof formSchema>;
 
 const SignInForm = () => {
   const [loading, setLoading] = useState(false);
-  const params = useParams();
   const router = useRouter();
   const session = useSession();
 
@@ -110,6 +109,7 @@ const SignInForm = () => {
                       disabled={loading}
                       placeholder="Password"
                       {...field}
+                      type="password"
                     />
                   </FormControl>
                   <FormMessage />

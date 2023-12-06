@@ -25,8 +25,14 @@ const SettingsPage: React.FC<SettingsPageProps> = async ({ params }) => {
 
   const user = await getCurrentUser(session?.user?.email);
   const storeUsers = await getStoreUsers(params.storeId);
+  const storeUserFilters = storeUsers.filter((user) => {
+    if (user.role !== 'ADMIN') {
+      return true;
+    }
+    return false;
+  });
 
-  const formattedUsers: UserColumn[] = storeUsers.map((user) => ({
+  const formattedUsers: UserColumn[] = storeUserFilters.map((user) => ({
     id: user.id,
     name: user.firstName + ' ' + user.lastName,
     userType: user.role,
