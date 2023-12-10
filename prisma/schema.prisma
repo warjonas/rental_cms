@@ -70,6 +70,7 @@ model Store{
   testimonials          Testimonial[] @relation("StoreToTestimonial")
   teamMembers           TeamMembers[] @relation("StoreToTeamMember")
   faqs                  FAQ[] @relation("StoreToFAQ")
+  customers             Customer[] @relation("StoreToCustomer")
 
 
   bankId                String?
@@ -230,17 +231,35 @@ model Image{
   @@index([productId])
 }
 
-model Quote{
-  id                    String @id 
+model Customer{
+  id                    String @id @default(uuid())
   firstName             String 
   lastName              String
   idNumber              String
   emailAddress          String
+  phone                 String  @default("")
+  hashedPassword        String
+  personalAddressLine1  String
+  personalAddressLine2  String @default("")
+  personalAddressCity   String
+  personalAddressSuburb String
+  personalPhoneNumber   String
+
+  quotes               Quote[] 
+  storeId               String
+  store                 Store @relation("StoreToCustomer", fields: [storeId],  references: [id])
+
+
+@@index([storeId])
+
+}
+
+model Quote{
+  id                    String @id 
+  
   isPaid                Boolean @default(false)
   eventDate             DateTime @default(now())
-  phone                 String  @default("")
-  createdAt             DateTime  @default(now())
-  updatedAt             DateTime  @updatedAt
+  
   totalPrice            Decimal
   deliveryAddressLine1  String
   deliveryAddressLine2  String @default("")
@@ -255,14 +274,20 @@ model Quote{
   thirdPartyPhoneNumber String
   confirmationPayment Boolean
   confirmationTerms Boolean
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
 
   orderItems            QuoteItem[]
   storeId               String
   store                 Store @relation("StoreToOrder", fields: [storeId],  references: [id])
+
+  customerId            String
+  customer              Customer @relation(fields: [customerId], references: [id])
   
 
   @@index([storeId])
   @@unique([id])
+  @@index([customerId])
 }
 
 model QuoteItem{

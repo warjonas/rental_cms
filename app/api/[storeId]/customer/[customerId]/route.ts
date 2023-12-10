@@ -1,0 +1,191 @@
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import prismadb from '@/lib/prismadb';
+import { auth } from '@clerk/nextjs';
+import { getServerSession } from 'next-auth';
+import { NextResponse } from 'next/server';
+
+export async function GET(
+  req: Request,
+  { params }: { params: { customerId: string } }
+) {
+  try {
+    if (!params.customerId) {
+      return new NextResponse('Customer ID is required', { status: 400 });
+    }
+
+    const customer = await prismadb.customer.findUnique({
+      where: {
+        id: params.customerId,
+      },
+    });
+
+    return NextResponse.json(customer);
+  } catch (error) {
+    console.log('[CUSTOMER_GET]', error);
+    return new NextResponse('Internal Error', { status: 500 });
+  }
+}
+
+export async function PATCH(
+  req: Request,
+  { params }: { params: { customerId: string; storeId: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.email) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+
+    const user = await prismadb.user.findUnique({
+      where: {
+        email: session?.user?.email,
+      },
+    });
+
+    const body = await req.json();
+    const {
+      email,
+      hashedPassword,
+      firstName,
+      lastName,
+      phone,
+      personalAddressLine1,
+      personalAddressLine2,
+      personalAddressCity,
+      personalAddressSuburb,
+      idNumber,
+    } = body;
+
+    if (!email) {
+      return new NextResponse('Email is required', { status: 400 });
+    }
+
+    if (!hashedPassword) {
+      return new NextResponse('Password is required', { status: 400 });
+    }
+
+    if (!firstName) {
+      return new NextResponse('First Name is required', { status: 400 });
+    }
+
+    if (!lastName) {
+      return new NextResponse('Last Name is required', { status: 400 });
+    }
+
+    if (!phone) {
+      return new NextResponse('Phone Number is required', { status: 400 });
+    }
+
+    if (!idNumber) {
+      return new NextResponse('ID Number is required', { status: 400 });
+    }
+
+    if (!personalAddressLine1) {
+      return new NextResponse('Address Line 1 is required', { status: 400 });
+    }
+
+    if (!personalAddressCity) {
+      return new NextResponse('City is required', { status: 400 });
+    }
+
+    if (!personalAddressSuburb) {
+      return new NextResponse('Suburb is required', { status: 400 });
+    }
+
+    if (!params.storeId) {
+      return new NextResponse('Store ID is required', { status: 400 });
+    }
+
+    if (!params.customerId) {
+      return new NextResponse('Billboard ID is required', { status: 400 });
+    }
+
+    if (!params.storeId) {
+      return new NextResponse('Store ID is required', { status: 400 });
+    }
+
+    const storeByUserId = await prismadb.userStore.findFirst({
+      where: {
+        userId: user?.id,
+        storeId: params.storeId,
+      },
+    });
+
+    if (!storeByUserId?.storeId) {
+      return new NextResponse('Unauthorized', { status: 403 });
+    }
+
+    const customer = await prismadb.customer.updateMany({
+      where: {
+        id: params.customerId,
+      },
+      data: {
+        firstName,
+        lastName,
+        hashedPassword,
+        personalAddressCity,
+        personalAddressLine1,
+        personalAddressLine2,
+        personalAddressSuburb,
+        personalPhoneNumber: phone,
+        idNumber,
+        emailAddress: email,
+      },
+    });
+
+    return NextResponse.json(customer);
+  } catch (error) {
+    console.log('[CUSTOMER_PATCH]', error);
+    return new NextResponse('Internal Error', { status: 500 });
+  }
+}
+
+export async function DELETE(
+  req: Request,
+  { params }: { params: { customerId: string; storeId: string } }
+) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.email) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+
+    const user = await prismadb.user.findUnique({
+      where: {
+        email: session?.user?.email,
+      },
+    });
+
+    if (!params.customerId) {
+      return new NextResponse('Billboard ID is required', { status: 400 });
+    }
+
+    if (!params.storeId) {
+      return new NextResponse('Store ID is required', { status: 400 });
+    }
+
+    const storeByUserId = await prismadb.userStore.findFirst({
+      where: {
+        userId: user?.id,
+        storeId: params.storeId,
+      },
+    });
+
+    if (!storeByUserId?.storeId) {
+      return new NextResponse('Unauthorized', { status: 403 });
+    }
+
+    const customer = await prismadb.customer.deleteMany({
+      where: {
+        id: params.customerId,
+      },
+    });
+
+    return NextResponse.json(customer);
+  } catch (error) {
+    console.log('[CUSTOMER_DELETE]', error);
+    return new NextResponse('Internal Error', { status: 500 });
+  }
+}
