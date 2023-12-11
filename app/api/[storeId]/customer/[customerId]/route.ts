@@ -1,6 +1,5 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import prismadb from '@/lib/prismadb';
-import { auth } from '@clerk/nextjs';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 
@@ -8,14 +7,15 @@ export async function GET(
   req: Request,
   { params }: { params: { customerId: string } }
 ) {
+  // Email is used as customerID in this method
   try {
     if (!params.customerId) {
-      return new NextResponse('Customer ID is required', { status: 400 });
+      return new NextResponse('Email Address is required', { status: 400 });
     }
 
     const customer = await prismadb.customer.findUnique({
       where: {
-        id: params.customerId,
+        emailAddress: params.customerId,
       },
     });
 

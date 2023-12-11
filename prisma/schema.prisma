@@ -251,6 +251,7 @@ model Customer{
 
 
 @@index([storeId])
+@@unique([emailAddress])
 
 }
 
