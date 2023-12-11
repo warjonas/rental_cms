@@ -21,31 +21,15 @@ export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
-  const { values, products } = await req.json();
+  const { values, products, customerId } = await req.json();
   const items = products;
+
+  if (!customerId) {
+    return new NextResponse('Unauthorized', { status: 403 });
+  }
 
   if (!products || products.length === 0) {
     return new NextResponse("Product's are required", { status: 400 });
-  }
-
-  if (!values.firstName) {
-    return new NextResponse('First name is required', { status: 400 });
-  }
-
-  if (!values.lastName) {
-    return new NextResponse('Last name is required', { status: 400 });
-  }
-
-  if (!values.idNumber) {
-    return new NextResponse('ID Number is required', { status: 400 });
-  }
-
-  if (!values.emailAddress) {
-    return new NextResponse('Email address is required', { status: 400 });
-  }
-
-  if (!values.phoneNumber) {
-    return new NextResponse('Phone Number name is required', { status: 400 });
   }
 
   if (!values.deliveryAddressLine1) {
@@ -122,13 +106,7 @@ export async function POST(
         storeId: params.storeId,
         isPaid: values.isPaid,
         totalPrice: values.totalPrice,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        emailAddress: values.emailAddress,
-        idNumber: values.idNumber,
-        eventDate: new Date(values.eventDate),
-
-        phone: values.phoneNumber,
+        customerId: customerId,
         deliveryAddressLine1: values.deliveryAddressLine1,
         deliveryAddressLine2: values.deliveryAddressLine2,
         deliveryAddressCity: values.deliveryAddressCity,

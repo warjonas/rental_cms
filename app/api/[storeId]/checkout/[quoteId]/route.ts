@@ -36,42 +36,24 @@ export async function PATCH(
 ) {
   try {
     const session = await getServerSession(authOptions);
+    const { values, products, customerId } = await req.json();
+    const items = products.items;
+    let user;
 
-    if (!session?.user?.email) {
+    if (!session?.user?.email || !customerId) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const user = await prismadb.user.findUnique({
-      where: {
-        email: session?.user?.email,
-      },
-    });
-
-    const { values, products } = await req.json();
-    const items = products.items;
+    if (session) {
+      user = await prismadb.user.findUnique({
+        where: {
+          email: session?.user?.email,
+        },
+      });
+    }
 
     if (!products || products.length === 0) {
       return new NextResponse("Product's are required", { status: 400 });
-    }
-
-    if (!values.firstName) {
-      return new NextResponse('First name is required', { status: 400 });
-    }
-
-    if (!values.lastName) {
-      return new NextResponse('Last name is required', { status: 400 });
-    }
-
-    if (!values.idNumber) {
-      return new NextResponse('ID Number is required', { status: 400 });
-    }
-
-    if (!values.emailAddress) {
-      return new NextResponse('Email address is required', { status: 400 });
-    }
-
-    if (!values.phoneNumber) {
-      return new NextResponse('Phone Number name is required', { status: 400 });
     }
 
     if (!values.deliveryAddressLine1) {
@@ -140,15 +122,17 @@ export async function PATCH(
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
-    const storeByUserId = await prismadb.userStore.findFirst({
-      where: {
-        userId: user?.id,
-        storeId: params.storeId,
-      },
-    });
+    if (session) {
+      const storeByUserId = await prismadb.userStore.findFirst({
+        where: {
+          userId: user?.id,
+          storeId: params.storeId,
+        },
+      });
 
-    if (!storeByUserId?.storeId) {
-      return new NextResponse('Unauthorized', { status: 403 });
+      if (!storeByUserId?.storeId) {
+        return new NextResponse('Unauthorized', { status: 403 });
+      }
     }
 
     await prismadb.quote.update({
@@ -159,12 +143,8 @@ export async function PATCH(
         storeId: params.storeId,
         isPaid: values.isPaid,
         totalPrice: values.totalPrice,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        emailAddress: values.emailAddress,
-        idNumber: values.idNumber,
+        customerId: customerId,
         // eventDate: new Date(values.eventDate),
-        phone: values.phoneNumber,
         deliveryAddressLine1: values.deliveryAddressLine1,
         deliveryAddressLine2: values.deliveryAddressLine2,
         deliveryAddressCity: values.deliveryAddressCity,
