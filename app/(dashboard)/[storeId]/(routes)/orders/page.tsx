@@ -18,8 +18,8 @@ const OrderPage = async ({ params }: { params: { storeId: string } }) => {
 
   const formattedOrders: OrderColumn[] = orders.map((item) => ({
     id: item.id,
-    name: item.firstName + ' ' + item.lastName,
-    phone: item.phone,
+    name: item.customer.firstName + ' ' + item.customer.lastName,
+    phone: item.customer.personalPhoneNumber,
     address: item.deliveryAddressLine1 + ', ' + item.deliveryAddressSuburb,
     isPaid: item.isPaid,
     products: item.orderItems

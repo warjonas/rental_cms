@@ -8,6 +8,7 @@ export const getOrders = async (storeId: string) => {
       storeId: storeId,
     },
     include: {
+      customer: true,
       orderItems: {
         include: {
           product: true,

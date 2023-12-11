@@ -7,7 +7,7 @@ export async function GET(
   req: Request,
   { params }: { params: { customerId: string } }
 ) {
-  // Email is used as customerID in this method
+  // Email is used as customerID in this function
   try {
     if (!params.customerId) {
       return new NextResponse('Email Address is required', { status: 400 });

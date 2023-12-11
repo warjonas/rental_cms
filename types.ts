@@ -27,15 +27,24 @@ export interface Product {
   // image: string
 }
 
-export interface Quote {
+export interface Customer {
   id: string;
   firstName: string;
   lastName: string;
   idNumber: string;
   emailAddress: string;
+  phone: string;
+  personalAddressLine1: string;
+  personalAddressLine2: string;
+  personalAddressCity: string;
+  personalAddressSuburb: string;
+}
+
+export interface Quote {
+  id: string;
   isPaid: boolean;
   eventDate: Date;
-  phoneNumber: string;
+  customer: Customer;
   totalPrice: number;
   deliveryAddressLine1: string;
   deliveryAddressLine2: string;

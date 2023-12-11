@@ -37,11 +37,8 @@ const QuotePage = async ({
 
   const quote: Quote = {
     id: items[0]?.quote?.id,
-    phoneNumber: items[0]?.quote?.phone,
-    firstName: items[0]?.quote?.firstName,
-    lastName: items[0]?.quote?.lastName,
-    idNumber: items[0]?.quote?.idNumber,
-    emailAddress: items[0]?.quote?.emailAddress,
+    customer: items[0]?.quote?.customer,
+
     eventDate: items[0]?.quote?.eventDate,
     isPaid: items[0]?.quote?.isPaid,
     deliveryAddressLine1: items[0]?.quote?.deliveryAddressLine1,

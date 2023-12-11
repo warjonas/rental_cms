@@ -11,7 +11,11 @@ export const getQuoteItems = async (quoteId: string) => {
           colour: true,
         },
       },
-      quote: true,
+      quote: {
+        include: {
+          customer: true,
+        },
+      },
     },
   });
 

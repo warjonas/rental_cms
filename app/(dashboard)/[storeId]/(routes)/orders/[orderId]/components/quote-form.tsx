@@ -109,6 +109,10 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
     defaultValues: initialData
       ? {
           ...initialData,
+          firstName: initialData.customer.firstName,
+          lastName: initialData.customer.lastName,
+          phoneNumber: initialData.customer.phone,
+
           confirmationPayment: true,
           confirmationTerms: true,
           totalPrice,
