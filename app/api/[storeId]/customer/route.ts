@@ -1,5 +1,6 @@
 import prismadb from '@/lib/prismadb';
 import { NextResponse } from 'next/server';
+import bcrypt from 'bcrypt';
 
 export async function POST(
   req: Request,
@@ -10,7 +11,7 @@ export async function POST(
 
     const {
       email,
-      hashedPassword,
+      password,
       firstName,
       lastName,
       phone,
@@ -35,7 +36,7 @@ export async function POST(
       return new NextResponse('Email is required', { status: 400 });
     }
 
-    if (!hashedPassword) {
+    if (!password) {
       return new NextResponse('Password is required', { status: 400 });
     }
 
@@ -81,11 +82,13 @@ export async function POST(
       return new NextResponse('Unauthorized', { status: 403 });
     }
 
+    const hash = await bcrypt.hash(password, 10);
+
     const customer = await prismadb.customer.create({
       data: {
         firstName,
         lastName,
-        hashedPassword,
+        hashedPassword: hash,
         personalAddressCity,
         personalAddressLine1,
         personalAddressLine2,
