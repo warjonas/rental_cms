@@ -10,11 +10,11 @@ export async function POST(
     const body = await req.json();
 
     const {
-      email,
+      emailAddress,
       password,
       firstName,
       lastName,
-      phone,
+      phoneNumber,
       personalAddressLine1,
       personalAddressLine2,
       personalAddressCity,
@@ -22,18 +22,17 @@ export async function POST(
       idNumber,
     } = body;
 
+    if (!emailAddress) {
+      return new NextResponse('Email is required', { status: 400 });
+    }
     const exist = await prismadb.user.findUnique({
       where: {
-        email,
+        email: emailAddress,
       },
     });
 
     if (exist) {
       throw new Error('Email already exists');
-    }
-
-    if (!email) {
-      return new NextResponse('Email is required', { status: 400 });
     }
 
     if (!password) {
@@ -48,7 +47,7 @@ export async function POST(
       return new NextResponse('Last Name is required', { status: 400 });
     }
 
-    if (!phone) {
+    if (!phoneNumber) {
       return new NextResponse('Phone Number is required', { status: 400 });
     }
 
@@ -93,9 +92,9 @@ export async function POST(
         personalAddressLine1,
         personalAddressLine2,
         personalAddressSuburb,
-        personalPhoneNumber: phone,
+        personalPhoneNumber: phoneNumber,
         idNumber,
-        emailAddress: email,
+        emailAddress,
         storeId: params.storeId,
       },
     });
