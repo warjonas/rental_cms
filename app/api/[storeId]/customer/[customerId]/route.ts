@@ -3,6 +3,17 @@ import prismadb from '@/lib/prismadb';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 
+const corsHeaders = {
+  'Access-Control-Allow-Credentials': `${process.env.CORS_ALLOW_CREDENTIALS}`,
+  'Access-Control-Allow-Origin': `${process.env.CORS_ALLOW_ORIGIN}`,
+  'Access-Control-Allow-Methods': `${process.env.CORS_ALLOW_METHODS}`,
+  'Access-Control-Allow-Headers': `${process.env.CORS_ALLOW_HEADERS}`,
+};
+
+export async function OPTIONS() {
+  return NextResponse.json({}, { headers: corsHeaders });
+}
+
 export async function GET(
   req: Request,
   { params }: { params: { customerId: string } }
