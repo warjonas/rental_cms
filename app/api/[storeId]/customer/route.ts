@@ -71,15 +71,15 @@ export async function POST(
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
-    const storeByUserId = await prismadb.store.findFirst({
-      where: {
-        id: params.storeId,
-      },
-    });
+    // const storeByUserId = await prismadb.store.findFirst({
+    //   where: {
+    //     id: params.storeId,
+    //   },
+    // });
 
-    if (!storeByUserId) {
-      return new NextResponse('Unauthorized', { status: 403 });
-    }
+    // if (!storeByUserId) {
+    //   return new NextResponse('Unauthorized', { status: 403 });
+    // }
 
     const hash = await bcrypt.hash(password, 10);
 
@@ -98,6 +98,8 @@ export async function POST(
         storeId: params.storeId,
       },
     });
+
+    console.log(customer);
 
     return NextResponse.json(customer);
   } catch (error) {
