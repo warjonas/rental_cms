@@ -282,7 +282,7 @@ model Order{
   store                 Store @relation("StoreToOrder", fields: [storeId],  references: [id])
 
   customerId            String
-  customer              Customer @relation(fields: [customerId], references: [id])
+  customer              Customer @relation(fields: [customerId], references: [id] ,onDelete: Cascade)
   
 
   @@index([storeId])

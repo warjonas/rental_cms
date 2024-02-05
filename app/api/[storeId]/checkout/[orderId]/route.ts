@@ -193,7 +193,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { quoteId: string; storeId: string } }
+  { params }: { params: { orderId: string; storeId: string } }
 ) {
   try {
     const session = await getServerSession(authOptions);
@@ -208,8 +208,8 @@ export async function DELETE(
       },
     });
 
-    if (!params.quoteId) {
-      return new NextResponse('Quote ID is required', { status: 400 });
+    if (!params.orderId) {
+      return new NextResponse('Order ID is required', { status: 400 });
     }
 
     if (!params.storeId) {
@@ -233,7 +233,7 @@ export async function DELETE(
 
     const Quote = await prismadb.order.deleteMany({
       where: {
-        id: params.quoteId,
+        id: params.orderId,
       },
     });
 
