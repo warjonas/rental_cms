@@ -7,25 +7,25 @@ import { NextResponse } from 'next/server';
 
 export async function GET(
   req: Request,
-  { params }: { params: { quoteId: string } }
+  { params }: { params: { orderId: string } }
 ) {
   try {
-    if (!params.quoteId) {
-      return new NextResponse('Quote ID is required', { status: 400 });
+    if (!params.orderId) {
+      return new NextResponse('Order ID is required', { status: 400 });
     }
 
-    const Quote = await prismadb.quote.findUnique({
+    const Order = await prismadb.order.findUnique({
       where: {
-        id: params.quoteId,
+        id: params.orderId,
       },
       include: {
         orderItems: true,
       },
     });
 
-    return NextResponse.json(Quote);
+    return NextResponse.json(Order);
   } catch (error) {
-    console.log('[QUOTE_GET]', error);
+    console.log('[ORDER_GET]', error);
     return new NextResponse('Internal Error', { status: 500 });
   }
 }
@@ -135,7 +135,7 @@ export async function PATCH(
       }
     }
 
-    await prismadb.quote.update({
+    await prismadb.order.update({
       where: {
         id: params.quoteId,
       },
@@ -164,7 +164,7 @@ export async function PATCH(
       },
     });
 
-    const quote = await prismadb.quote.update({
+    const order = await prismadb.order.update({
       where: {
         id: params.quoteId,
       },
@@ -184,9 +184,9 @@ export async function PATCH(
       },
     });
 
-    return NextResponse.json(quote);
+    return NextResponse.json(order);
   } catch (error) {
-    console.log('[QUOTE_PATCH]', error);
+    console.log('[ORDER_PATCH]', error);
     return new NextResponse('Internal Error', { status: 500 });
   }
 }
@@ -231,7 +231,7 @@ export async function DELETE(
       return new NextResponse('Unauthorized', { status: 403 });
     }
 
-    const Quote = await prismadb.quote.deleteMany({
+    const Quote = await prismadb.order.deleteMany({
       where: {
         id: params.quoteId,
       },
@@ -239,7 +239,7 @@ export async function DELETE(
 
     return NextResponse.json(Quote);
   } catch (error) {
-    console.log('[QUOTE_DELETE]', error);
+    console.log('[ORDER_DELETE]', error);
     return new NextResponse('Internal Error', { status: 500 });
   }
 }

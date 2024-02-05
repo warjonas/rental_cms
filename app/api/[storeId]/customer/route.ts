@@ -21,6 +21,7 @@ export async function POST(
     const body = await req.json();
 
     const {
+      id,
       emailAddress,
       password,
       firstName,
@@ -46,10 +47,6 @@ export async function POST(
       throw new Error('Email already exists');
     }
 
-    if (!password) {
-      return new NextResponse('Password is required', { status: 400 });
-    }
-
     if (!firstName) {
       return new NextResponse('First Name is required', { status: 400 });
     }
@@ -58,29 +55,29 @@ export async function POST(
       return new NextResponse('Last Name is required', { status: 400 });
     }
 
-    if (!phoneNumber) {
-      return new NextResponse('Phone Number is required', { status: 400 });
-    }
+    // if (!phoneNumber) {
+    //   return new NextResponse('Phone Number is required', { status: 400 });
+    // }
 
-    if (!idNumber) {
-      return new NextResponse('ID Number is required', { status: 400 });
-    }
+    // if (!idNumber) {
+    //   return new NextResponse('ID Number is required', { status: 400 });
+    // }
 
-    if (!personalAddressLine1) {
-      return new NextResponse('Address Line 1 is required', { status: 400 });
-    }
+    // if (!personalAddressLine1) {
+    //   return new NextResponse('Address Line 1 is required', { status: 400 });
+    // }
 
-    if (!personalAddressCity) {
-      return new NextResponse('City is required', { status: 400 });
-    }
+    // if (!personalAddressCity) {
+    //   return new NextResponse('City is required', { status: 400 });
+    // }
 
-    if (!personalAddressSuburb) {
-      return new NextResponse('Suburb is required', { status: 400 });
-    }
+    // if (!personalAddressSuburb) {
+    //   return new NextResponse('Suburb is required', { status: 400 });
+    // }
 
-    if (!params.storeId) {
-      return new NextResponse('Store ID is required', { status: 400 });
-    }
+    // if (!params.storeId) {
+    //   return new NextResponse('Store ID is required', { status: 400 });
+    // }
 
     // const storeByUserId = await prismadb.store.findFirst({
     //   where: {
@@ -88,25 +85,20 @@ export async function POST(
     //   },
     // });
 
-    // if (!storeByUserId) {
-    //   return new NextResponse('Unauthorized', { status: 403 });
-    // }
+    // // if (!storeByUserId) {
+    // //   return new NextResponse('Unauthorized', { status: 403 });
+    // // }
 
-    const hash = await bcrypt.hash(password, 10);
+    // const hash = await bcrypt.hash(password, 10);
 
     const customer = await prismadb.customer.create({
       data: {
+        id,
+        storeId: params.storeId,
         firstName,
         lastName,
-        hashedPassword: hash,
-        personalAddressCity,
-        personalAddressLine1,
-        personalAddressLine2,
-        personalAddressSuburb,
-        personalPhoneNumber: phoneNumber,
-        idNumber,
+
         emailAddress,
-        storeId: params.storeId,
       },
     });
 

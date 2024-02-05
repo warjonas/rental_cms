@@ -66,7 +66,7 @@ model Store{
   products              Product[] @relation("StoreToProduct")
   billboards            Billboard[] @relation("StoreToBillboard")
   categories            Category[] @relation("StoreToCategory")
-  quotes                Quote[] @relation("StoreToOrder")
+  orders                Order[] @relation("StoreToOrder")
   testimonials          Testimonial[] @relation("StoreToTestimonial")
   teamMembers           TeamMembers[] @relation("StoreToTeamMember")
   faqs                  FAQ[] @relation("StoreToFAQ")
@@ -199,7 +199,7 @@ model Product{
   updatedAt             DateTime  @updatedAt
   qty                   Decimal
   images                Image[]
-  quoteItem             QuoteItem[]
+  orderItem             OrderItem[]
 
   sizeId                String
   size                  Size @relation(fields: [sizeId], references: [id])
@@ -232,20 +232,19 @@ model Image{
 }
 
 model Customer{
-  id                    String @id @default(uuid())
+  id                    String @id 
   firstName             String 
   lastName              String
-  idNumber              String
+  idNumber              String @default("")
   emailAddress          String
-  phone                 String  @default("")
-  hashedPassword        String
-  personalAddressLine1  String
+  phone                 String @default("")
+  personalAddressLine1  String @default("")
   personalAddressLine2  String @default("")
-  personalAddressCity   String
-  personalAddressSuburb String
-  personalPhoneNumber   String
+  personalAddressCity   String @default("")
+  personalAddressSuburb String @default("")
+  personalPhoneNumber   String @default("")
 
-  quotes               Quote[] 
+  quotes               Order[] 
   storeId               String
   store                 Store @relation("StoreToCustomer", fields: [storeId],  references: [id])
 
@@ -255,9 +254,9 @@ model Customer{
 
 }
 
-model Quote{
+model Order{
   id                    String @id 
-  
+   
   isPaid                Boolean @default(false)
   eventDate             DateTime @default(now())
   
@@ -278,7 +277,7 @@ model Quote{
   createdAt             DateTime  @default(now())
   updatedAt             DateTime  @updatedAt
 
-  orderItems            QuoteItem[]
+  orderItems            OrderItem[]
   storeId               String
   store                 Store @relation("StoreToOrder", fields: [storeId],  references: [id])
 
@@ -291,13 +290,13 @@ model Quote{
   @@index([customerId])
 }
 
-model QuoteItem{
+model OrderItem{
   id                    String @id  @default(uuid())  
   unitPrice             Decimal
   qty                   Decimal
 
   quoteId               String
-  quote                 Quote @relation(fields: [quoteId],  references: [id], onDelete: Cascade) 
+  quote                 Order @relation(fields: [quoteId],  references: [id], onDelete: Cascade) 
 
   productId             String
   product               Product @relation(fields: [productId],  references: [id])

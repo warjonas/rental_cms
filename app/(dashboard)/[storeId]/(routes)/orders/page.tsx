@@ -4,6 +4,7 @@ import prismadb from '@/lib/prismadb';
 import { OrderColumn } from './components/columns';
 import { formatter } from '@/lib/utils';
 import { getOrders } from '@/actions/getOrders';
+import { Order } from '@prisma/client';
 
 export const revalidate = true;
 

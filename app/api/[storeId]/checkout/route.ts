@@ -1,4 +1,3 @@
-import Stripe from 'stripe';
 import { NextResponse } from 'next/server';
 
 // import { stripe } from '@/lib/stripe';
@@ -21,10 +20,10 @@ export async function POST(
   req: Request,
   { params }: { params: { storeId: string } }
 ) {
-  const { values, products, customerId } = await req.json();
+  const { values, products } = await req.json();
   const items = products;
 
-  if (!customerId) {
+  if (!values.customerId) {
     return new NextResponse('Unauthorized', { status: 403 });
   }
 
@@ -91,8 +90,8 @@ export async function POST(
 
   const d = new Date();
 
-  const quoteId =
-    'INV-' +
+  const orderId =
+    'ORD-' +
     d.getMonth().toString() +
     d.getFullYear().toString() +
     '-' +
@@ -100,13 +99,13 @@ export async function POST(
     d.getSeconds().toString();
 
   try {
-    const quote = await prismadb.quote.create({
+    const order = await prismadb.order.create({
       data: {
-        id: quoteId,
+        id: orderId,
         storeId: params.storeId,
         isPaid: values.isPaid,
         totalPrice: values.totalPrice,
-        customerId: customerId,
+        customerId: values.customerId,
         deliveryAddressLine1: values.deliveryAddressLine1,
         deliveryAddressLine2: values.deliveryAddressLine2,
         deliveryAddressCity: values.deliveryAddressCity,
@@ -135,9 +134,9 @@ export async function POST(
         },
       },
     });
-    return NextResponse.json({ quote, status: 200 });
+    return NextResponse.json({ order, status: 200 });
   } catch (error) {
-    console.log('[QUOTE_POST]', error);
+    console.log('[ORDER_POST]', error);
     return new NextResponse('Internal Error', { status: 400 });
   }
 }

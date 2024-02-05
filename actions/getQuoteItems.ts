@@ -1,9 +1,9 @@
 import prismadb from '@/lib/prismadb';
 
-export const getQuoteItems = async (quoteId: string) => {
-  const items = await prismadb.quoteItem.findMany({
+export const getQuoteItems = async (orderId: string) => {
+  const items = await prismadb.orderItem.findMany({
     where: {
-      quoteId: quoteId,
+      quoteId: orderId,
     },
     include: {
       product: {

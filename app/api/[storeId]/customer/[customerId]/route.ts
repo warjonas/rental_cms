@@ -42,25 +42,9 @@ export async function PATCH(
   { params }: { params: { customerId: string; storeId: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session?.user?.email) {
-      return new NextResponse('Unauthorized', { status: 401 });
-    }
-
-    const user = await prismadb.user.findUnique({
-      where: {
-        email: session?.user?.email,
-      },
-    });
-
     const body = await req.json();
     const {
-      email,
-      hashedPassword,
-      firstName,
-      lastName,
-      phone,
+      phoneNumber,
       personalAddressLine1,
       personalAddressLine2,
       personalAddressCity,
@@ -68,23 +52,7 @@ export async function PATCH(
       idNumber,
     } = body;
 
-    if (!email) {
-      return new NextResponse('Email is required', { status: 400 });
-    }
-
-    if (!hashedPassword) {
-      return new NextResponse('Password is required', { status: 400 });
-    }
-
-    if (!firstName) {
-      return new NextResponse('First Name is required', { status: 400 });
-    }
-
-    if (!lastName) {
-      return new NextResponse('Last Name is required', { status: 400 });
-    }
-
-    if (!phone) {
+    if (!phoneNumber) {
       return new NextResponse('Phone Number is required', { status: 400 });
     }
 
@@ -112,13 +80,8 @@ export async function PATCH(
       return new NextResponse('Billboard ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
-      return new NextResponse('Store ID is required', { status: 400 });
-    }
-
     const storeByUserId = await prismadb.userStore.findFirst({
       where: {
-        userId: user?.id,
         storeId: params.storeId,
       },
     });
@@ -132,16 +95,12 @@ export async function PATCH(
         id: params.customerId,
       },
       data: {
-        firstName,
-        lastName,
-        hashedPassword,
         personalAddressCity,
         personalAddressLine1,
         personalAddressLine2,
         personalAddressSuburb,
-        personalPhoneNumber: phone,
+        personalPhoneNumber: phoneNumber,
         idNumber,
-        emailAddress: email,
       },
     });
 
@@ -157,17 +116,17 @@ export async function DELETE(
   { params }: { params: { customerId: string; storeId: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    // const session = await getServerSession(authOptions);
 
-    if (!session?.user?.email) {
-      return new NextResponse('Unauthorized', { status: 401 });
-    }
+    // if (!session?.user?.email) {
+    //   return new NextResponse('Unauthorized', { status: 401 });
+    // }
 
-    const user = await prismadb.user.findUnique({
-      where: {
-        email: session?.user?.email,
-      },
-    });
+    // const user = await prismadb.user.findUnique({
+    //   where: {
+    //     email: session?.user?.email,
+    //   },
+    // });
 
     if (!params.customerId) {
       return new NextResponse('Billboard ID is required', { status: 400 });
@@ -179,7 +138,7 @@ export async function DELETE(
 
     const storeByUserId = await prismadb.userStore.findFirst({
       where: {
-        userId: user?.id,
+        // userId: user?.id,
         storeId: params.storeId,
       },
     });
