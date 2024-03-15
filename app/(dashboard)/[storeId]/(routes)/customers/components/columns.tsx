@@ -10,6 +10,7 @@ export type MemberColumn = {
   firstName: string;
   lastName: string;
   email: string;
+  registered: string;
 };
 
 export const columns: ColumnDef<MemberColumn>[] = [
@@ -33,6 +34,10 @@ export const columns: ColumnDef<MemberColumn>[] = [
   {
     accessorKey: 'phone',
     header: 'Phone No.',
+  },
+  {
+    accessorKey: 'registered',
+    header: 'Registered On',
   },
 
   // {

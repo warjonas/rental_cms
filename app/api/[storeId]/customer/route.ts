@@ -55,48 +55,13 @@ export async function POST(
       return new NextResponse('Last Name is required', { status: 400 });
     }
 
-    // if (!phoneNumber) {
-    //   return new NextResponse('Phone Number is required', { status: 400 });
-    // }
-
-    // if (!idNumber) {
-    //   return new NextResponse('ID Number is required', { status: 400 });
-    // }
-
-    // if (!personalAddressLine1) {
-    //   return new NextResponse('Address Line 1 is required', { status: 400 });
-    // }
-
-    // if (!personalAddressCity) {
-    //   return new NextResponse('City is required', { status: 400 });
-    // }
-
-    // if (!personalAddressSuburb) {
-    //   return new NextResponse('Suburb is required', { status: 400 });
-    // }
-
-    // if (!params.storeId) {
-    //   return new NextResponse('Store ID is required', { status: 400 });
-    // }
-
-    // const storeByUserId = await prismadb.store.findFirst({
-    //   where: {
-    //     id: params.storeId,
-    //   },
-    // });
-
-    // // if (!storeByUserId) {
-    // //   return new NextResponse('Unauthorized', { status: 403 });
-    // // }
-
-    // const hash = await bcrypt.hash(password, 10);
-
     const customer = await prismadb.customer.create({
       data: {
         id,
         storeId: params.storeId,
         firstName,
         lastName,
+        lastLoggedIn: new Date(),
 
         emailAddress,
       },
@@ -124,6 +89,7 @@ export async function GET(
       where: {
         storeId: params.storeId,
       },
+      orderBy: {},
     });
 
     return NextResponse.json(customers);

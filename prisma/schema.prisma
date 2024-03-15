@@ -247,6 +247,8 @@ model Customer{
   quotes               Order[] 
   storeId               String
   store                 Store @relation("StoreToCustomer", fields: [storeId],  references: [id])
+  created               DateTime? @default(now())
+  lastLoggedIn          DateTime?
 
 
 @@index([storeId])

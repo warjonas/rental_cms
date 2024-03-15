@@ -3,29 +3,19 @@ import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
 async function main() {
-  const password = process.env.PASSWORD;
-
-  if (password) {
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await prisma.user.create({
-      data: {
-        firstName: 'Moreen',
-        lastName: 'Fortuin',
-        email: 'moreen@morpies',
-        hashedPassword,
-        role: 'MANAGER',
-        stores: {
-          create: {
-            store: {
-              connect: {
-                id: `${process.env.STORE_ID}`,
-              },
-            },
-          },
-        },
-      },
-    });
-  }
+  // const user = await prisma.customer.create({
+  //   data: {
+  //     id: '',
+  //     firstName: '',
+  //     lastName: ' ',
+  //     emailAddress: '',
+  //     store: {
+  //       connect: {
+  //         id: process.env.STORE_ID,
+  //       },
+  //     },
+  //   },
+  // });
 }
 main()
   .then(async () => {
