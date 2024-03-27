@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import { CustomerClient } from './components/client';
 import prismadb from '@/lib/prismadb';
 import { MemberColumn } from './components/columns';
+import { Customer } from '@/types';
 
 const CustomersPage = async ({ params }: { params: { storeId: string } }) => {
   const customers = await prismadb.customer.findMany({
@@ -21,7 +22,9 @@ const CustomersPage = async ({ params }: { params: { storeId: string } }) => {
     email: item.emailAddress,
     phone: item.personalPhoneNumber,
     address: item.personalAddressLine1 + ', ' + item.personalAddressSuburb,
-    registered: format(new Date(item.created), 'dd/MM/yyyy'),
+    registered: item.created
+      ? format(new Date(item.created), 'dd/MM/yyyy')
+      : format(new Date(), 'dd/MM/yyyy'),
   }));
 
   return (

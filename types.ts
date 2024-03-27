@@ -38,7 +38,9 @@ export interface Customer {
   personalAddressLine2: string;
   personalAddressCity: string;
   personalAddressSuburb: string;
-  created: Date;
+  personalPhoneNumber: string;
+  created?: Date;
+  lastLoggedIn?: Date;
 }
 
 export interface Quote {
