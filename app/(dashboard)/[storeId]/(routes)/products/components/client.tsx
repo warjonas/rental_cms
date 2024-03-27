@@ -12,9 +12,13 @@ import ApiList from '@/components/ui/api-list';
 
 interface ProductClientProps {
   data: ProductColumn[];
+  userType?: String;
 }
 
-export const ProductClient: React.FC<ProductClientProps> = ({ data }) => {
+export const ProductClient: React.FC<ProductClientProps> = ({
+  data,
+  userType,
+}) => {
   const router = useRouter();
   const params = useParams();
 
@@ -35,7 +39,9 @@ export const ProductClient: React.FC<ProductClientProps> = ({ data }) => {
       <Heading title="API" description="API Calls for products" />
       <Separator className="my-4" />
 
-      <ApiList entityName="products" entityIdName="productsId" />
+      {userType === 'MANAGER' || !userType ? null : (
+        <ApiList entityName="products" entityIdName="productsId" />
+      )}
     </>
   );
 };

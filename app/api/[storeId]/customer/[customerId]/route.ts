@@ -92,7 +92,7 @@ export async function PATCH(
 
     const customer = await prismadb.customer.updateMany({
       where: {
-        id: params.customerId,
+        emailAddress: params.customerId,
       },
       data: {
         personalAddressCity,
@@ -149,7 +149,7 @@ export async function DELETE(
 
     const customer = await prismadb.customer.deleteMany({
       where: {
-        id: params.customerId,
+        emailAddress: params.customerId,
       },
     });
 

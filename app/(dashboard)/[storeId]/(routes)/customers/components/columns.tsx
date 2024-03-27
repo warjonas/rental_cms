@@ -10,6 +10,7 @@ export type MemberColumn = {
   firstName: string;
   lastName: string;
   email: string;
+  address: string;
   registered: string;
 };
 
@@ -32,6 +33,10 @@ export const columns: ColumnDef<MemberColumn>[] = [
     header: 'Email Address',
   },
   {
+    accessorKey: 'address',
+    header: 'Personal Address',
+  },
+  {
     accessorKey: 'phone',
     header: 'Phone No.',
   },
@@ -40,8 +45,8 @@ export const columns: ColumnDef<MemberColumn>[] = [
     header: 'Registered On',
   },
 
-  // {
-  //   id: 'actions',
-  //   cell: ({ row }) => <CellAction data={row.original} />,
-  // },
+  {
+    id: 'actions',
+    cell: ({ row }) => <CellAction data={row.original} />,
+  },
 ];

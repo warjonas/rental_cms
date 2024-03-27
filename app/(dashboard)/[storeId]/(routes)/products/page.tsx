@@ -3,6 +3,7 @@ import { ProductClient } from './components/client';
 import prismadb from '@/lib/prismadb';
 import { ProductColumn } from './components/columns';
 import { formatter } from '@/lib/utils';
+import { getCurrentUser } from '@/actions/getCurrentUser';
 
 const ProductsPage = async ({ params }: { params: { storeId: string } }) => {
   const products = await prismadb.product.findMany({
@@ -18,6 +19,8 @@ const ProductsPage = async ({ params }: { params: { storeId: string } }) => {
       createdAt: 'desc',
     },
   });
+
+  const user = await getCurrentUser();
 
   const formattedProducts: ProductColumn[] = products.map((item) => ({
     id: item.id,
@@ -36,7 +39,7 @@ const ProductsPage = async ({ params }: { params: { storeId: string } }) => {
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <ProductClient data={formattedProducts} />
+        <ProductClient data={formattedProducts} userType={user?.role} />
       </div>
     </div>
   );

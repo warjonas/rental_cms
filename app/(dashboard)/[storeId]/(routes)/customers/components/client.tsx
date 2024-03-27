@@ -32,7 +32,7 @@ export const CustomerClient: React.FC<CustomerClientProps> = ({ data }) => {
       </div>
 
       <Separator className="my-4" />
-      <DataTable columns={columns} data={data} searchKey="name" />
+      <DataTable columns={columns} data={data} searchKey="email" />
       <Heading title="API" description="API Calls for members" />
       <Separator className="my-4" />
 

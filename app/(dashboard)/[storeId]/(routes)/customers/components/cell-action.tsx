@@ -35,10 +35,11 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/members/${data.id}`);
+      await axios.delete(`/api/${params.storeId}/customer/${data.email}`);
       router.refresh();
-      toast.success('Member has been deleted');
+      toast.success('Customer information has been deleted');
     } catch (error) {
+      console.log(error);
       toast.error('Something went wrong. Try Again');
     } finally {
       setLoading(false);
@@ -63,7 +64,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>Actions</DropdownMenuLabel>
-          <DropdownMenuItem onClick={onCopy}>
+          {/* <DropdownMenuItem onClick={onCopy}>
             <Copy className="mr-2 h-4 w-4" />
             Copy Id
           </DropdownMenuItem>
@@ -72,7 +73,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
           >
             <Edit className="mr-2 h-4 w-4" />
             Update
-          </DropdownMenuItem>
+          </DropdownMenuItem> */}
 
           <DropdownMenuItem onClick={() => setOpen(true)}>
             <Trash className="mr-2 h-4 w-4" />

@@ -8,6 +8,9 @@ const CustomersPage = async ({ params }: { params: { storeId: string } }) => {
     where: {
       storeId: params.storeId,
     },
+    orderBy: {
+      created: 'desc',
+    },
   });
 
   const formattedMembers: MemberColumn[] = customers.map((item) => ({
@@ -17,7 +20,8 @@ const CustomersPage = async ({ params }: { params: { storeId: string } }) => {
     lastName: item.lastName,
     email: item.emailAddress,
     phone: item.personalPhoneNumber,
-    registered: format(new Date(), 'dd/MM/yyyy'),
+    address: item.personalAddressLine1 + ', ' + item.personalAddressSuburb,
+    registered: format(new Date(item.created), 'dd/MM/yyyy'),
   }));
 
   return (
