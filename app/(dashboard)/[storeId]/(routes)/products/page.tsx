@@ -11,8 +11,8 @@ const ProductsPage = async ({ params }: { params: { storeId: string } }) => {
       storeId: params.storeId,
     },
     include: {
-      category: true,
       colour: true,
+      category: true,
       size: true,
     },
     orderBy: {
