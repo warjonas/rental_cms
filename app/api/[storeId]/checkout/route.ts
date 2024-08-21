@@ -21,9 +21,9 @@ export async function POST(
   { params }: { params: { storeId: string } }
 ) {
   const { values, products } = await req.json();
-  const items = products;
+  const items = products.items;
 
-  if (!values.customerId) {
+  if (!values.customer) {
     return new NextResponse('Unauthorized', { status: 403 });
   }
 
@@ -105,7 +105,7 @@ export async function POST(
         storeId: params.storeId,
         isPaid: values.isPaid,
         totalPrice: values.totalPrice,
-        customerId: values.customerId,
+        customerId: values.customer,
         deliveryAddressLine1: values.deliveryAddressLine1,
         deliveryAddressLine2: values.deliveryAddressLine2,
         deliveryAddressCity: values.deliveryAddressCity,

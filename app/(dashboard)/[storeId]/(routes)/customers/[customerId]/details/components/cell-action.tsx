@@ -16,9 +16,10 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { AlertModal } from '@/components/modals/alert-modal';
+import { OrderColumn } from '../../../../orders/components/columns';
 
 interface CellActionProps {
-  data: MemberColumn;
+  data: OrderColumn;
 }
 
 export const CellAction: React.FC<CellActionProps> = ({ data }) => {
@@ -35,7 +36,7 @@ export const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const onDelete = async () => {
     try {
       setLoading(true);
-      await axios.delete(`/api/${params.storeId}/customer/${data.email}`);
+      await axios.delete(`/api/${params.storeId}/customer/${data.id}`);
       router.refresh();
       toast.success('Customer information has been deleted');
     } catch (error) {

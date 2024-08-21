@@ -25,10 +25,10 @@ export const CustomerClient: React.FC<CustomerClientProps> = ({ data }) => {
           title={`Customers (${data.length})`}
           description="Manage team members for your store"
         />
-        {/* <Button onClick={() => router.push(`/${params.storeId}/team/new`)}>
+        <Button onClick={() => router.push(`/${params.storeId}/customers/new`)}>
           <Plus className="mr-2 h-4 w-4" />
           Add New
-        </Button> */}
+        </Button>
       </div>
 
       <Separator className="my-4" />

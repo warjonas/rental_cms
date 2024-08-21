@@ -21,8 +21,7 @@ export async function POST(
     const body = await req.json();
 
     const {
-      id,
-      emailAddress,
+      email,
       password,
       firstName,
       lastName,
@@ -34,12 +33,12 @@ export async function POST(
       idNumber,
     } = body;
 
-    if (!emailAddress) {
+    if (!email) {
       return new NextResponse('Email is required', { status: 400 });
     }
     const exist = await prismadb.user.findUnique({
       where: {
-        email: emailAddress,
+        email,
       },
     });
 
@@ -57,17 +56,20 @@ export async function POST(
 
     const customer = await prismadb.customer.create({
       data: {
-        id,
         storeId: params.storeId,
         firstName,
         lastName,
+        idNumber,
         lastLoggedIn: new Date(),
+        personalAddressCity,
+        personalAddressLine1,
+        personalAddressLine2,
+        personalAddressSuburb,
+        personalPhoneNumber: phoneNumber,
 
-        emailAddress,
+        emailAddress: email,
       },
     });
-
-    console.log(customer);
 
     return NextResponse.json(customer);
   } catch (error) {

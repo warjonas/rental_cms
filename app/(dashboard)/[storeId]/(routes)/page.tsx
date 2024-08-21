@@ -41,7 +41,8 @@ const DashboardPage: React.FC<Props> = async ({ params }) => {
 
             <CardContent>
               <div className="text-2xl font-bold">
-                {formatter.format(totalRevenue)}
+                {formatter.format(totalRevenue)}{' '}
+                <span className="text-muted-foreground text-sm">YTD</span>
               </div>
             </CardContent>
           </Card>

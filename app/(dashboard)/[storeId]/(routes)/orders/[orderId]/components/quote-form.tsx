@@ -21,7 +21,7 @@ import { toast } from 'react-hot-toast';
 import { Checkbox } from '@/components/ui/checkbox';
 import useQuoteStore from '@/hooks/use-quote';
 import NoResults from '@/components/ui/no-results';
-import { CalendarIcon, PlusIcon } from 'lucide-react';
+import { CalendarIcon, Check, ChevronsUpDown, PlusIcon } from 'lucide-react';
 import Currency from '@/components/ui/currency';
 import { QuoteItemModal } from './quote-item-modal';
 
@@ -32,7 +32,6 @@ import { Quote } from '@/types';
 import { Product } from '@/types';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
-import qs from 'query-string';
 import { cn } from '@/lib/utils';
 import {
   Popover,
@@ -41,22 +40,26 @@ import {
 } from '@/components/ui/popover';
 import { format } from 'date-fns';
 import { Calendar } from '@/components/ui/calendar';
-
-export const revalidate = true;
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
+import { Customer } from '@prisma/client';
 
 interface QuoteFormProps {
   initialData: Quote | null;
   products: ProductColumn[];
   items: Product[];
+  customers: Customer[];
 }
 
 const formSchema = z.object({
-  firstName: z.string().min(1),
-  lastName: z.string().min(1),
-  idNumber: z.string().max(13).min(13),
-  emailAddress: z.string().email(),
   eventDate: z.date({ required_error: 'Event date is required.' }),
-  phoneNumber: z.string().min(10).max(10),
+  customer: z.string().min(1),
   deliveryAddressLine1: z.string().min(1),
   deliveryAddressLine2: z.string().default(''),
   deliveryAddressCity: z.string().min(1),
@@ -78,6 +81,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
   products,
   initialData,
   items,
+  customers,
 }) => {
   const quoteItems = useQuoteStore();
   const params = useParams();
@@ -87,6 +91,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
   const [loading, setLoading] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(false);
 
   const totalPrice = quoteItems.items.reduce((total, item) => {
     return total + Number(item.totalPrice);
@@ -109,9 +114,6 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
     defaultValues: initialData
       ? {
           ...initialData,
-          firstName: initialData.customer.firstName,
-          lastName: initialData.customer.lastName,
-          phoneNumber: initialData.customer.phone,
 
           confirmationPayment: true,
           confirmationTerms: true,
@@ -121,14 +123,35 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
           isPaid: false,
           confirmationPayment: true,
           confirmationTerms: true,
+          customer: '',
+          deliveryAddressLine1: '',
+          deliveryAddressLine2: '',
+          deliveryAddressCity: '',
+          deliveryAddressSuburb: '',
+          deliveryPhoneNumber: '',
+          thirdPartyAddressLine1: '',
+          thirdPartyAddressLine2: '',
+
+          thirdPartyAddressCity: '',
+          thirdPartyAddressSuburb: '',
+          thirdPartyContactPerson: '',
+          thirdPartyPhoneNumber: '',
 
           totalPrice,
         },
   });
 
+  const { watch, formState } = form;
+
+  let errMessage = 'Something went wrong!';
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setLoading(true);
+
+      if (quoteItems.items.length === 0) {
+        errMessage = 'No items selected!';
+      }
 
       let response;
       values.totalPrice = totalPrice;
@@ -153,7 +176,8 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
       router.push(`/${params.storeId}/orders`);
     } catch (error) {
       console.log({ error });
-      toast.error('Something Went Wrong!');
+
+      toast.error(errMessage);
     } finally {
       setLoading(false);
     }
@@ -186,6 +210,79 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
               onSubmit={form.handleSubmit(onSubmit)}
               className="flex flex-col gap-4"
             >
+              <FormField
+                control={form.control}
+                name="customer"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col w-full">
+                    <FormLabel>Select a customer</FormLabel>
+                    <Popover open={openDropdown} onOpenChange={setOpenDropdown}>
+                      <PopoverTrigger asChild>
+                        <FormControl>
+                          <Button
+                            variant="outline"
+                            role="combobox"
+                            className={cn(
+                              'w-full justify-between',
+                              !field.value && 'text-muted-foreground'
+                            )}
+                          >
+                            {field.value
+                              ? customers.find(
+                                  (customer) => customer.id === field.value
+                                )?.firstName +
+                                ' ' +
+                                customers.find(
+                                  (customer) => customer.id === field.value
+                                )?.lastName +
+                                ' - ' +
+                                customers.find(
+                                  (customer) => customer.id === field.value
+                                )?.personalAddressLine1
+                              : 'Select customer'}
+                            <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-full p-0">
+                        <Command>
+                          <CommandInput placeholder="Search customer..." />
+                          <CommandList>
+                            <CommandEmpty>No customer found.</CommandEmpty>
+                            <CommandGroup>
+                              {customers.map((customer: Customer) => (
+                                <CommandItem
+                                  value={customer.id}
+                                  key={customer.id}
+                                  onSelect={() => {
+                                    form.setValue('customer', customer.id);
+                                    setOpenDropdown(false);
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      'mr-2 h-4 w-4',
+                                      customer.id === field.value
+                                        ? 'opacity-100'
+                                        : 'opacity-0'
+                                    )}
+                                  />
+                                  {customer.firstName + ' ' + customer.lastName}
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </PopoverContent>
+                    </Popover>
+                    <FormDescription>
+                      The customer whom the order is being placed for.
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <FormField
                 control={form.control}
                 name="eventDate"
@@ -228,80 +325,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                   </FormItem>
                 )}
               />
-              <FormField
-                control={form.control}
-                name="firstName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>First Name:*</FormLabel>
-                    <FormControl>
-                      <Input placeholder="John" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="lastName"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Last Name:*</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Doe" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="idNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>ID Number:*</FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder="8504126122086"
-                        {...field}
-                        maxLength={13}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="emailAddress"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email Address:*</FormLabel>
-                    <FormControl>
-                      <Input placeholder="johndoe@email.com" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="phoneNumber"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Phone Number:*</FormLabel>
-                    <FormControl>
-                      <Input
-                        disabled={loading}
-                        placeholder="0123456789"
-                        {...field}
-                        maxLength={10}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+
               <div className="gap-5 flex flex-col md:flex-row w-full lg:gap-x-20 max-md:gap-y-10">
                 <section className="gap-5 flex flex-col lg:w-1/2">
                   <h1 className={` text-primary text-2xl`}>
@@ -340,7 +364,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                       <FormItem>
                         <FormLabel>Suburb:*</FormLabel>
                         <FormControl>
-                          <Input placeholder="8504126122086" {...field} />
+                          <Input placeholder="Bethelsdorp" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -353,7 +377,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                       <FormItem>
                         <FormLabel>City:*</FormLabel>
                         <FormControl>
-                          <Input placeholder="johndoe@email.com" {...field} />
+                          <Input placeholder="PE" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -419,7 +443,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                       <FormItem>
                         <FormLabel>Suburb*</FormLabel>
                         <FormControl>
-                          <Input placeholder="8504126122086" {...field} />
+                          <Input placeholder="Malabar" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -432,7 +456,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                       <FormItem>
                         <FormLabel>City:</FormLabel>
                         <FormControl>
-                          <Input placeholder="johndoe@email.com" {...field} />
+                          <Input placeholder="PE" {...field} />
                         </FormControl>
                         <FormMessage />
                       </FormItem>
@@ -447,7 +471,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                         <FormControl>
                           <Input
                             disabled={loading}
-                            placeholder="0123456789"
+                            placeholder="Louis"
                             {...field}
                             maxLength={10}
                           />
@@ -527,15 +551,12 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                 <Button
                   onClick={() => onCancel()}
                   type="button"
-                  className="bg-red-800 text-primary hover:bg-red-900 border hover:border-red-900"
+                  className="bg-red-800 text-background hover:bg-red-900 border hover:border-red-900"
                 >
                   Cancel
                 </Button>
 
-                <Button
-                  disabled={loading || quoteItems.items.length === 0}
-                  type="submit"
-                >
+                <Button disabled={loading} type="submit">
                   {!initialData ? 'Continue' : 'Update'}
                 </Button>
               </div>

@@ -1,6 +1,7 @@
 import prismadb from '@/lib/prismadb';
 import React from 'react';
 import MemberForm from './components/member-form';
+import RegisterForm from './components/registerForm';
 
 const MemberPage = async ({
   params,
@@ -16,7 +17,7 @@ const MemberPage = async ({
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <MemberForm initialData={customer} />
+        <RegisterForm initialData={customer} />
       </div>
     </div>
   );

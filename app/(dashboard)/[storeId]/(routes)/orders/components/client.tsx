@@ -12,9 +12,10 @@ import ApiList from '@/components/ui/api-list';
 
 interface OrderClientProps {
   data: OrderColumn[];
+  role: string | undefined;
 }
 
-export const OrderClient: React.FC<OrderClientProps> = ({ data }) => {
+export const OrderClient: React.FC<OrderClientProps> = ({ data, role }) => {
   const router = useRouter();
   const params = useParams();
 
@@ -35,7 +36,9 @@ export const OrderClient: React.FC<OrderClientProps> = ({ data }) => {
       <Heading title="API" description="API Calls for orders" />
       <Separator className="my-4" />
 
-      <ApiList entityName="orders" entityIdName="orderId" />
+      {role == 'ADMIN' && (
+        <ApiList entityName="orders" entityIdName="orderId" />
+      )}
     </>
   );
 };

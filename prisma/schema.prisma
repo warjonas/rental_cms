@@ -199,7 +199,7 @@ model Image {
 }
 
 model Customer {
-  id                    String    @id
+  id                    String   @id @default(uuid())
   firstName             String
   lastName              String
   idNumber              String    @default("")

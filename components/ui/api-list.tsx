@@ -13,6 +13,7 @@ const ApiList: React.FC<ApiListProps> = ({ entityIdName, entityName }) => {
   const origin = useOrigin();
 
   const baseUrl = `${origin}/api/${params.storeId}`;
+
   return (
     <>
       <ApiAlert

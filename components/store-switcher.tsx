@@ -10,7 +10,6 @@ import {
   Store as StoreIcon,
 } from 'lucide-react';
 
-import { Store, UserStore } from '@prisma/client';
 import { Button } from '@/components/ui/button';
 import {
   Popover,

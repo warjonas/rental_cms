@@ -47,7 +47,7 @@ export interface Quote {
   id: string;
   isPaid: boolean;
   eventDate: Date;
-  customer: Customer;
+  customer: string;
   totalPrice: number;
   deliveryAddressLine1: string;
   deliveryAddressLine2: string;

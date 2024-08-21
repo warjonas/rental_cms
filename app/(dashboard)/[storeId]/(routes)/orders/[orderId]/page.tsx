@@ -4,15 +4,21 @@ import { getProducts } from '@/actions/getProducts';
 import { QuoteForm } from './components/quote-form';
 import { ProductColumn } from './components/columns';
 import { getQuoteItems } from '@/actions/getQuoteItems';
-import { Product } from '@/types';
+import { Customer, Product } from '@/types';
 import { Quote } from '@/types';
+import prismadb from '@/lib/prismadb';
 
-const QuotePage = async ({
+const OrderPage = async ({
   params,
 }: {
   params: { orderId: string; storeId: string };
 }) => {
   const products = await getProducts(params.storeId);
+  const customers = await prismadb.customer.findMany({
+    where: {
+      storeId: params.storeId,
+    },
+  });
 
   const formattedProducts: ProductColumn[] = products.map((item) => ({
     id: item.id,
@@ -37,7 +43,7 @@ const QuotePage = async ({
 
   const quote: Quote = {
     id: items[0]?.quote?.id,
-    customer: items[0]?.quote?.customer,
+    customer: items[0]?.quote?.customer.id,
 
     eventDate: items[0]?.quote?.eventDate,
     isPaid: items[0]?.quote?.isPaid,
@@ -68,10 +74,11 @@ const QuotePage = async ({
           items={formattedItems}
           initialData={items.length !== 0 ? quote : null}
           products={formattedProducts}
+          customers={customers}
         />
       </div>
     </div>
   );
 };
 
-export default QuotePage;
+export default OrderPage;

@@ -5,11 +5,13 @@ import { OrderColumn } from './components/columns';
 import { formatter } from '@/lib/utils';
 import { getOrders } from '@/actions/getOrders';
 import { Order } from '@prisma/client';
+import { getCurrentUser } from '@/actions/getCurrentUser';
 
-export const revalidate = true;
+export const revalidate = false;
 
 const OrderPage = async ({ params }: { params: { storeId: string } }) => {
   const orders = await getOrders(params.storeId);
+  const user = await getCurrentUser();
 
   // formatter.format(
   //     item.orderItems.reduce((total, item) => {
@@ -32,7 +34,7 @@ const OrderPage = async ({ params }: { params: { storeId: string } }) => {
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <OrderClient data={formattedOrders} />
+        <OrderClient data={formattedOrders} role={user?.role} />
       </div>
     </div>
   );

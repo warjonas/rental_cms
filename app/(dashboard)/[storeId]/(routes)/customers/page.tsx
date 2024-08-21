@@ -3,6 +3,8 @@ import { CustomerClient } from './components/client';
 import prismadb from '@/lib/prismadb';
 import { MemberColumn } from './components/columns';
 import { Customer } from '@/types';
+import { Suspense } from 'react';
+import Loading from './loading';
 
 const CustomersPage = async ({ params }: { params: { storeId: string } }) => {
   const customers = await prismadb.customer.findMany({
@@ -30,7 +32,9 @@ const CustomersPage = async ({ params }: { params: { storeId: string } }) => {
   return (
     <div className="flex-col">
       <div className="flex-1 space-y-4 p-8 pt-6">
-        <CustomerClient data={formattedMembers} />
+        <Suspense fallback={<Loading />}>
+          <CustomerClient data={formattedMembers} />
+        </Suspense>
       </div>
     </div>
   );
