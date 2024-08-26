@@ -1,7 +1,7 @@
 import React from 'react';
 import SignInForm from './components/sign-in-form';
 
-const SignInPage = () => {
+const SignInPage = async () => {
   return (
     <div>
       <SignInForm />

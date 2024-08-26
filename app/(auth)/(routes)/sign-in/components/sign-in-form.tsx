@@ -15,13 +15,15 @@ import { Separator } from '@/components/ui/separator';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useEffect } from 'react';
 
-import { signIn, useSession } from 'next-auth/react';
+import { signIn, auth } from '@/app/auth';
+import { useSession } from 'next-auth/react';
 
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
+import axios from 'axios';
 
 const formSchema = z.object({
   email: z.string().min(1),
@@ -46,24 +48,15 @@ const SignInForm = () => {
   }, []);
 
   const onSubmit = async (data: SignInFormValues) => {
-    console.log('Submit');
     try {
       setLoading(true);
 
-      signIn('credentials', {
-        ...data,
-        redirect: false,
-      }).then(async (callback) => {
-        if (callback?.error) {
-          toast.error(callback.error);
-        }
+      await axios.post('/api/auth/signIn', data);
 
-        if (callback?.ok && !callback?.error) {
-          toast.success('Logged in succesfully');
-          router.push(`/`);
-        }
-      });
+      toast.success('Successfully Signed in!');
+      router.push('/');
     } catch (error) {
+      console.log('error', error);
       toast.error('Something went wrong!');
     } finally {
       setLoading(false);

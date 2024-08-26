@@ -1,7 +1,6 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { auth } from '@/app/auth';
 import prismadb from '@/lib/prismadb';
-import { auth } from '@clerk/nextjs';
-import { getServerSession } from 'next-auth';
+
 import { NextResponse } from 'next/server';
 
 export async function GET(
@@ -31,7 +30,7 @@ export async function PATCH(
   { params }: { params: { billboardId: string; storeId: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -96,7 +95,7 @@ export async function DELETE(
   { params }: { params: { billboardId: string; storeId: string } }
 ) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await auth();
 
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });

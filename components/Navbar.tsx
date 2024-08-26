@@ -2,14 +2,13 @@ import { MainNav } from '@/components/main-nav';
 import StoreSwitcher from '@/components/store-switcher';
 import { redirect } from 'next/navigation';
 import { ModeToggle } from './theme-toggle';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { auth } from '@/app/auth';
+
 import { getCurrentUser } from '@/actions/getCurrentUser';
 import { SignOutBtn } from './ui/signOutBtn';
 
 const Navbar = async () => {
-  const session = await getServerSession(authOptions);
-
+  const session = await auth();
   if (!session?.user?.email) {
     redirect('/sign-in');
   }

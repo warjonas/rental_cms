@@ -1,9 +1,8 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { auth } from '@/app/auth';
 import prismadb from '@/lib/prismadb';
-import { getServerSession } from 'next-auth';
 
 export const getCurrentUser = async (email?: string) => {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (!email && session?.user?.email) {
     email = session.user.email;
