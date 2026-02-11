@@ -1,7 +1,9 @@
-import { PrismaClient, User } from '@prisma/client';
-import bcrypt from 'bcrypt';
+import { PrismaPg } from '@prisma/adapter-pg';
+import { PrismaClient } from '../generated/prisma/client';
 
-const prisma = new PrismaClient();
+const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
+const prisma = new PrismaClient({ adapter });
+
 async function main() {
   // const user = await prisma.customer.create({
   //   data: {
