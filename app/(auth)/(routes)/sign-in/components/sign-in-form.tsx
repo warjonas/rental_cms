@@ -24,6 +24,7 @@ import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import * as z from 'zod';
 import axios from 'axios';
+import Link from 'next/link';
 
 const formSchema = z.object({
   email: z.string().min(1),
@@ -77,7 +78,7 @@ const SignInForm = () => {
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-8 w-full flex h-[80%] flex-col"
         >
-          <div className="flex flex-col gap-8">
+          <div className="flex flex-col gap-8 mb-5">
             <FormField
               control={form.control}
               name="email"
@@ -114,6 +115,10 @@ const SignInForm = () => {
           <Button disabled={loading} className="ml-auto " type="submit">
             Log In
           </Button>
+          <Separator className="my-5" />
+          <p>
+            Dont have an account? <a href="/register">Register Here</a>{' '}
+          </p>
         </form>
       </Form>
     </div>
