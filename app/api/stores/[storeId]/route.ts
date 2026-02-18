@@ -6,16 +6,17 @@ import { auth } from '@/app/auth';
 
 export async function GET(
   req: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: Promise<{ storeId: string }> },
 ) {
   try {
-    if (!params.storeId) {
+    const parameters = await params;
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const store = await prismadb.store.findUnique({
       where: {
-        id: params.storeId,
+        id: parameters.storeId,
       },
     });
 
@@ -28,10 +29,11 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: Promise<{ storeId: string }> },
 ) {
   try {
     const session = await auth();
+    const parameters = await params;
 
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -54,13 +56,13 @@ export async function PATCH(
       return new NextResponse('Name is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const store = await prismadb.store.updateMany({
       where: {
-        id: params.storeId,
+        id: parameters.storeId,
         users: {
           some: {
             userId: user?.id,
@@ -82,10 +84,11 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: Promise<{ storeId: string }> },
 ) {
   try {
     const session = await auth();
+    const parameters = await params;
 
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -97,13 +100,13 @@ export async function DELETE(
       },
     });
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const store = await prismadb.store.deleteMany({
       where: {
-        id: params.storeId,
+        id: parameters.storeId,
         users: {
           some: {
             userId: user?.id,

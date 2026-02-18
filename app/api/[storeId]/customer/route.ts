@@ -15,7 +15,7 @@ export async function OPTIONS() {
 
 export async function POST(
   req: Request,
-  { params }: { params: { storeId: string } },
+  { params }: { params: Promise<{ storeId: string }> },
 ) {
   try {
     const parameters = await params;
@@ -85,16 +85,17 @@ export async function POST(
 
 export async function GET(
   req: Request,
-  { params }: { params: { storeId: string } },
+  { params }: { params: Promise<{ storeId: string }> },
 ) {
   try {
-    if (!params.storeId) {
+    const parameters = await params;
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const customers = await prismadb.customer.findMany({
       where: {
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
       orderBy: {},
     });

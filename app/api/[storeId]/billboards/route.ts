@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(
   req: Request,
-  { params }: { params: { storeId: string } },
+  { params }: { params: Promise<{ storeId: string }> },
 ) {
   try {
     const session = await auth();
@@ -56,7 +56,7 @@ export async function POST(
         label,
         imageUrl,
         subtext,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
     });
 
@@ -69,7 +69,7 @@ export async function POST(
 
 export async function GET(
   req: Request,
-  { params }: { params: { storeId: string } },
+  { params }: { params: Promise<{ storeId: string }> },
 ) {
   const parameters = await params;
 

@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 
 export async function POST(
   req: Request,
-  { params }: { params: { storeId: string } },
+  { params }: { params: Promise<{ storeId: string }> },
 ) {
   try {
     const session = await auth();
@@ -22,7 +22,7 @@ export async function POST(
 
     const body = await req.json();
 
-    const { phone, firstName, lastName, imageUrl, position } = body;
+    const { firstName, lastName, imageUrl, position } = body;
 
     if (!firstName) {
       return new NextResponse('Product Name is required', { status: 400 });
@@ -32,15 +32,6 @@ export async function POST(
     }
     if (!position) {
       return new NextResponse('Product Name is required', { status: 400 });
-    }
-    if (!phone) {
-      return new NextResponse('Product Name is required', { status: 400 });
-    }
-
-    if (!imageUrl) {
-      return new NextResponse('At least 1 product image is required', {
-        status: 400,
-      });
     }
 
     if (!parameters.storeId) {
@@ -60,7 +51,6 @@ export async function POST(
 
     const member = await prismadb.teamMembers.create({
       data: {
-        id: phone,
         firstName,
         lastName,
         position,
@@ -78,7 +68,7 @@ export async function POST(
 
 export async function GET(
   req: Request,
-  { params }: { params: { storeId: string } },
+  { params }: { params: Promise<{ storeId: string }> },
 ) {
   try {
     const { searchParams } = new URL(req.url);

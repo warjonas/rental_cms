@@ -14,12 +14,12 @@ export async function OPTIONS() {
 
 export async function GET(
   req: Request,
-  { params }: { params: { customerId: string } },
+  { params }: { params: Promise<{ customerId: string }> },
 ) {
   // Email is used as customerID in this function
   try {
     const parameters = await params;
-    if (!params.customerId) {
+    if (!parameters.customerId) {
       return new NextResponse('Email Address is required', { status: 400 });
     }
 
@@ -38,7 +38,7 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { customerId: string; storeId: string } },
+  { params }: { params: Promise<{ customerId: string; storeId: string }> },
 ) {
   try {
     const paramaters = await params;
@@ -113,7 +113,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { customerId: string; storeId: string } },
+  { params }: { params: Promise<{ customerId: string; storeId: string }> },
 ) {
   try {
     const parameters = await params;

@@ -4,10 +4,11 @@ import { NextResponse } from 'next/server';
 
 export async function GET(
   req: Request,
-  { params }: { params: { sizeId: string } },
+  { params }: { params: Promise<{ sizeId: string }> },
 ) {
   try {
     const parameters = await params;
+
     if (!parameters.sizeId) {
       return new NextResponse('Size ID is required', { status: 400 });
     }
@@ -27,7 +28,7 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { sizeId: string; storeId: string } },
+  { params }: { params: Promise<{ sizeId: string; storeId: string }> },
 ) {
   try {
     const session = await auth();
@@ -92,7 +93,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { sizeId: string; storeId: string } },
+  { params }: { params: Promise<{ sizeId: string; storeId: string }> },
 ) {
   try {
     const session = await auth();

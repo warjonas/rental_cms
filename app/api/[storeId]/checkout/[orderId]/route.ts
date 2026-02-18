@@ -7,7 +7,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET(
   req: Request,
-  { params }: { params: { orderId: string } },
+  { params }: { params: Promise<{ orderId: string }> },
 ) {
   try {
     const parameters = await params;
@@ -33,7 +33,7 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { quoteId: string; storeId: string } },
+  { params }: { params: Promise<{ orderId: string; storeId: string }> },
 ) {
   try {
     const parameters = await params;
@@ -117,8 +117,8 @@ export async function PATCH(
         status: 400,
       });
     }
-    if (!parameters.quoteId) {
-      return new NextResponse('Quote ID is required', { status: 400 });
+    if (!parameters.orderId) {
+      return new NextResponse('Order ID is required', { status: 400 });
     }
 
     if (!parameters.storeId) {
@@ -140,10 +140,10 @@ export async function PATCH(
 
     await prismadb.order.update({
       where: {
-        id: params.quoteId,
+        id: parameters.orderId,
       },
       data: {
-        storeId: params.storeId,
+        storeId: parameters.storeId,
         isPaid: values.isPaid,
         totalPrice: values.totalPrice,
         customerId: customerId,
@@ -169,7 +169,7 @@ export async function PATCH(
 
     const order = await prismadb.order.update({
       where: {
-        id: params.quoteId,
+        id: parameters.orderId,
       },
       data: {
         orderItems: {
@@ -196,10 +196,11 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { orderId: string; storeId: string } },
+  { params }: { params: Promise<{ orderId: string; storeId: string }> },
 ) {
   try {
     const session = await auth();
+    const parameters = await params;
 
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -211,22 +212,22 @@ export async function DELETE(
       },
     });
 
-    if (!params.orderId) {
+    if (!parameters.orderId) {
       return new NextResponse('Order ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.userStore.findFirst({
       where: {
         userId: user?.id,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
     });
 
@@ -236,7 +237,7 @@ export async function DELETE(
 
     const Quote = await prismadb.order.deleteMany({
       where: {
-        id: params.orderId,
+        id: parameters.orderId,
       },
     });
 

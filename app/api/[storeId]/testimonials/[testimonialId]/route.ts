@@ -4,16 +4,17 @@ import { NextResponse } from 'next/server';
 
 export async function GET(
   req: Request,
-  { params }: { params: { testimonialId: string } }
+  { params }: { params: Promise<{ testimonialId: string }> },
 ) {
   try {
-    if (!params.testimonialId) {
+    const parameters = await params;
+    if (!parameters.testimonialId) {
       return new NextResponse('testimonial ID is required', { status: 400 });
     }
 
     const testimonial = await prismadb.testimonial.findUnique({
       where: {
-        id: params.testimonialId,
+        id: parameters.testimonialId,
       },
     });
 
@@ -26,9 +27,10 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { testimonialId: string; storeId: string } }
+  { params }: { params: Promise<{ testimonialId: string; storeId: string }> },
 ) {
   try {
+    const parameters = await params;
     const session = await auth();
 
     if (!session?.user?.email) {
@@ -52,22 +54,22 @@ export async function PATCH(
       return new NextResponse('Message is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
-    if (!params.testimonialId) {
+    if (!parameters.testimonialId) {
       return new NextResponse('Testmonial ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.userStore.findFirst({
       where: {
         userId: user?.id,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
     });
 
@@ -77,7 +79,7 @@ export async function PATCH(
 
     const testimonial = await prismadb.testimonial.updateMany({
       where: {
-        id: params.testimonialId,
+        id: parameters.testimonialId,
       },
       data: {
         clientName,
@@ -94,10 +96,11 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { testimonialId: string; storeId: string } }
+  { params }: { params: Promise<{ testimonialId: string; storeId: string }> },
 ) {
   try {
     const session = await auth();
+    const parameters = await params;
 
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -109,22 +112,22 @@ export async function DELETE(
       },
     });
 
-    if (!params.testimonialId) {
+    if (!parameters.testimonialId) {
       return new NextResponse('Testimonial ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.userStore.findFirst({
       where: {
         userId: user?.id,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
     });
 
@@ -134,7 +137,7 @@ export async function DELETE(
 
     const testimonial = await prismadb.testimonial.deleteMany({
       where: {
-        id: params.testimonialId,
+        id: parameters.testimonialId,
       },
     });
 

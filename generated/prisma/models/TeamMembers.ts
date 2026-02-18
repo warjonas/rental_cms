@@ -242,7 +242,7 @@ export type TeamMembersScalarWhereWithAggregatesInput = {
 }
 
 export type TeamMembersCreateInput = {
-  id: string
+  id?: string
   firstName: string
   lastName: string
   position: string
@@ -251,7 +251,7 @@ export type TeamMembersCreateInput = {
 }
 
 export type TeamMembersUncheckedCreateInput = {
-  id: string
+  id?: string
   firstName: string
   lastName: string
   position: string
@@ -278,7 +278,7 @@ export type TeamMembersUncheckedUpdateInput = {
 }
 
 export type TeamMembersCreateManyInput = {
-  id: string
+  id?: string
   firstName: string
   lastName: string
   position: string
@@ -389,7 +389,7 @@ export type TeamMembersUncheckedUpdateManyWithoutStoreNestedInput = {
 }
 
 export type TeamMembersCreateWithoutStoreInput = {
-  id: string
+  id?: string
   firstName: string
   lastName: string
   position: string
@@ -397,7 +397,7 @@ export type TeamMembersCreateWithoutStoreInput = {
 }
 
 export type TeamMembersUncheckedCreateWithoutStoreInput = {
-  id: string
+  id?: string
   firstName: string
   lastName: string
   position: string
@@ -443,7 +443,7 @@ export type TeamMembersScalarWhereInput = {
 }
 
 export type TeamMembersCreateManyStoreInput = {
-  id: string
+  id?: string
   firstName: string
   lastName: string
   position: string

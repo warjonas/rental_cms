@@ -5,11 +5,11 @@ import { NextResponse } from 'next/server';
 
 export async function GET(
   req: Request,
-  { params }: { params: { productId: string } },
+  { params }: { params: Promise<{ productId: string }> },
 ) {
   try {
     const parameters = await params;
-    if (!params.productId) {
+    if (!parameters.productId) {
       return new NextResponse('Product ID is required', { status: 400 });
     }
 
@@ -34,7 +34,7 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { productId: string; storeId: string } },
+  { params }: { params: Promise<{ productId: string; storeId: string }> },
 ) {
   try {
     const session = await auth();
@@ -150,10 +150,11 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { productId: string; storeId: string } },
+  { params }: { params: Promise<{ productId: string; storeId: string }> },
 ) {
   try {
     const session = await auth();
+    const parameters = await params;
 
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -165,22 +166,22 @@ export async function DELETE(
       },
     });
 
-    if (!params.productId) {
+    if (!parameters.productId) {
       return new NextResponse('Product ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.userStore.findFirst({
       where: {
         userId: user?.id,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
     });
 
@@ -190,7 +191,7 @@ export async function DELETE(
 
     const product = await prismadb.product.deleteMany({
       where: {
-        id: params.productId,
+        id: parameters.productId,
       },
     });
 
