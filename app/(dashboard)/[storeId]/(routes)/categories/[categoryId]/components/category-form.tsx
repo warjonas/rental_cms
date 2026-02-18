@@ -23,7 +23,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { useOrigin } from '@/hooks/use-origin';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Billboard, Category } from '@prisma/client';
+import { Billboard, Category } from '@/generated/prisma/client';
 import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -79,7 +79,7 @@ const BillboardForm: React.FC<CategoryFormProps> = ({
       if (initialData) {
         await axios.patch(
           `/api/${params.storeId}/categories/${params.categoryId}`,
-          data
+          data,
         );
       } else {
         await axios.post(`/api/${params.storeId}/categories`, data);
@@ -99,14 +99,14 @@ const BillboardForm: React.FC<CategoryFormProps> = ({
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${params.storeId}/categories/${params.billboardId}`
+        `/api/${params.storeId}/categories/${params.billboardId}`,
       );
       router.refresh();
       router.push(`/${params.storeId}/categories`);
       toast.success('Catergory has been deleted');
     } catch (error) {
       toast.error(
-        'Make sure that all products for this category have been deleted'
+        'Make sure that all products for this category have been deleted',
       );
     } finally {
       setLoading(false);

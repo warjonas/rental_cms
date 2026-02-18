@@ -25,7 +25,13 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Category, Colour, Image, Product, Size } from '@prisma/client';
+import {
+  Category,
+  Colour,
+  Image,
+  Product,
+  Size,
+} from '@/generated/prisma/client';
 import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -106,7 +112,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
       if (initialData) {
         await axios.patch(
           `/api/${params.storeId}/products/${params.productId}`,
-          data
+          data,
         );
       } else {
         await axios.post(`/api/${params.storeId}/products`, data);

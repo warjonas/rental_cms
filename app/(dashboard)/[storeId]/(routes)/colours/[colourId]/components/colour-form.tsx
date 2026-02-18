@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useOrigin } from '@/hooks/use-origin';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Size } from '@prisma/client';
+import { Size } from '@/generated/prisma/client';
 import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -66,7 +66,7 @@ const ColourForm: React.FC<ColourFormProps> = ({ initialData }) => {
       if (initialData) {
         await axios.patch(
           `/api/${params.storeId}/colours/${params.colourId}`,
-          data
+          data,
         );
       } else {
         await axios.post(`/api/${params.storeId}/colours`, data);

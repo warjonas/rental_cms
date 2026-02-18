@@ -14,9 +14,10 @@ import { Heading } from '@/components/ui/heading';
 import ImageUpload from '@/components/ui/image-upload';
 import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
+import { Billboard } from '@/generated/prisma/client';
 import { useOrigin } from '@/hooks/use-origin';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Billboard } from '@prisma/client';
+
 import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -68,7 +69,7 @@ const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
       if (initialData) {
         await axios.patch(
           `/api/${params.storeId}/billboards/${params.billboardId}`,
-          data
+          data,
         );
       } else {
         await axios.post(`/api/${params.storeId}/billboards`, data);
@@ -87,7 +88,7 @@ const BillboardForm: React.FC<BillboardFormProps> = ({ initialData }) => {
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${params.storeId}/billboards/${params.billboardId}`
+        `/api/${params.storeId}/billboards/${params.billboardId}`,
       );
       router.refresh();
       router.push(`/${params.storeId}/billboard`);

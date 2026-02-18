@@ -48,7 +48,7 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command';
-import { Customer } from '@prisma/client';
+import { Customer } from '@/generated/prisma/client';
 
 interface QuoteFormProps {
   initialData: Quote | null;
@@ -167,7 +167,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
           {
             values,
             products: quoteItems,
-          }
+          },
         );
       }
 
@@ -224,20 +224,20 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                             role="combobox"
                             className={cn(
                               'w-full justify-between',
-                              !field.value && 'text-muted-foreground'
+                              !field.value && 'text-muted-foreground',
                             )}
                           >
                             {field.value
                               ? customers.find(
-                                  (customer) => customer.id === field.value
+                                  (customer) => customer.id === field.value,
                                 )?.firstName +
                                 ' ' +
                                 customers.find(
-                                  (customer) => customer.id === field.value
+                                  (customer) => customer.id === field.value,
                                 )?.lastName +
                                 ' - ' +
                                 customers.find(
-                                  (customer) => customer.id === field.value
+                                  (customer) => customer.id === field.value,
                                 )?.personalAddressLine1
                               : 'Select customer'}
                             <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -264,7 +264,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                                       'mr-2 h-4 w-4',
                                       customer.id === field.value
                                         ? 'opacity-100'
-                                        : 'opacity-0'
+                                        : 'opacity-0',
                                     )}
                                   />
                                   {customer.firstName + ' ' + customer.lastName}
@@ -296,7 +296,7 @@ export const QuoteForm: React.FC<QuoteFormProps> = ({
                             variant={'outline'}
                             className={cn(
                               'w-full pl-3 text-left font-normal ',
-                              !field.value && 'text-muted-foreground'
+                              !field.value && 'text-muted-foreground',
                             )}
                           >
                             {field.value ? (

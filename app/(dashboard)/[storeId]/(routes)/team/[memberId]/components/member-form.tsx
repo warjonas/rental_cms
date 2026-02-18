@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useOrigin } from '@/hooks/use-origin';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TeamMembers } from '@prisma/client';
+import { TeamMembers } from '@/generated/prisma/client';
 import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -74,7 +74,7 @@ const MemberForm: React.FC<MemberFormProps> = ({ initialData }) => {
       if (initialData) {
         await axios.patch(
           `/api/${params.storeId}/team/${params.memberId}`,
-          data
+          data,
         );
       } else {
         await axios.post(`/api/${params.storeId}/team`, data);

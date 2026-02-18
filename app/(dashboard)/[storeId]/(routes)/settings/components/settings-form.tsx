@@ -16,7 +16,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useOrigin } from '@/hooks/use-origin';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Store, StoreBank } from '@prisma/client';
+import { Store, StoreBank } from '@/generated/prisma/client';
 import axios from 'axios';
 import { BanknoteIcon, PencilIcon, Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -81,7 +81,7 @@ const SettingsForm: React.FC<SettingsFormProps> = ({
       toast.success('Store has been deleted');
     } catch (error) {
       toast.error(
-        'Make sure that all products and categories have been deleted'
+        'Make sure that all products and categories have been deleted',
       );
     } finally {
       setLoading(false);

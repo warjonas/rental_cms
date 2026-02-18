@@ -17,7 +17,7 @@ import { Separator } from '@/components/ui/separator';
 import { Textarea } from '@/components/ui/textarea';
 import { useOrigin } from '@/hooks/use-origin';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Testimonial } from '@prisma/client';
+import { Testimonial } from '@/generated/prisma/client';
 import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -67,7 +67,7 @@ const TestimonialForm: React.FC<TestimonialFormProps> = ({ initialData }) => {
       if (initialData) {
         await axios.patch(
           `/api/${params.storeId}/testimonials/${params.testimonialId}`,
-          data
+          data,
         );
       } else {
         await axios.post(`/api/${params.storeId}/testimonials`, data);
@@ -86,7 +86,7 @@ const TestimonialForm: React.FC<TestimonialFormProps> = ({ initialData }) => {
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${params.storeId}/testimonials/${params.testimonialId}`
+        `/api/${params.storeId}/testimonials/${params.testimonialId}`,
       );
       router.refresh();
       router.push(`/${params.storeId}/testimonial`);

@@ -22,7 +22,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { useOrigin } from '@/hooks/use-origin';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Billboard, StoreBank } from '@prisma/client';
+import { Billboard, StoreBank } from '@/generated/prisma/client';
 import axios from 'axios';
 import { Trash } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
@@ -93,14 +93,14 @@ const BankForm: React.FC<BankFormProps> = ({ initialData }) => {
     try {
       setLoading(true);
       await axios.delete(
-        `/api/${params.storeId}/categories/${params.billboardId}`
+        `/api/${params.storeId}/categories/${params.billboardId}`,
       );
       router.refresh();
       router.push(`/${params.storeId}/settings`);
       toast.success('Banking details has been deleted');
     } catch (error) {
       toast.error(
-        'Make sure that all stores using this bank have been deleted'
+        'Make sure that all stores using this bank have been deleted',
       );
     } finally {
       setLoading(false);

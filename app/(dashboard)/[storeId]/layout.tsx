@@ -7,7 +7,10 @@ import prismadb from '@/lib/prismadb';
 import { redirect } from 'next/navigation';
 import React from 'react';
 
-type Props = { children: React.ReactNode; params: { storeId: string } };
+type Props = {
+  children: React.ReactNode;
+  params: Promise<{ storeId: string }>;
+};
 
 async function DashBoardLayout({ children, params }: Props) {
   const session = await auth();

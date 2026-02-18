@@ -19,7 +19,7 @@ import axios from 'axios';
 import { useParams, useRouter, useSearchParams } from 'next/navigation';
 import { useUser } from '@clerk/nextjs';
 import { Button } from '@/components/ui/button';
-import { Customer } from '@prisma/client';
+import { Customer } from '@/generated/prisma/client';
 import { Heading } from '@/components/ui/heading';
 import { Separator } from '@/components/ui/separator';
 
@@ -86,7 +86,7 @@ const RegisterForm = ({ initialData }: RegisterFormProps) => {
     } catch (error) {
       console.log(error);
       toast.error(
-        'Something Went Wrong. Please check all fields and Try again!'
+        'Something Went Wrong. Please check all fields and Try again!',
       );
     } finally {
       setLoading(false);
