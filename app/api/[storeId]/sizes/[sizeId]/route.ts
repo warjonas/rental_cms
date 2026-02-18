@@ -4,16 +4,17 @@ import { NextResponse } from 'next/server';
 
 export async function GET(
   req: Request,
-  { params }: { params: { sizeId: string } }
+  { params }: { params: { sizeId: string } },
 ) {
   try {
-    if (!params.sizeId) {
+    const parameters = await params;
+    if (!parameters.sizeId) {
       return new NextResponse('Size ID is required', { status: 400 });
     }
 
     const size = await prismadb.size.findUnique({
       where: {
-        id: params.sizeId,
+        id: parameters.sizeId,
       },
     });
 
@@ -26,10 +27,11 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { sizeId: string; storeId: string } }
+  { params }: { params: { sizeId: string; storeId: string } },
 ) {
   try {
     const session = await auth();
+    const parameters = await params;
 
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -48,22 +50,22 @@ export async function PATCH(
       return new NextResponse('Size Name is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
-    if (!params.sizeId) {
+    if (!parameters.sizeId) {
       return new NextResponse('Size ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.userStore.findFirst({
       where: {
         userId: user?.id,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
     });
 
@@ -73,7 +75,7 @@ export async function PATCH(
 
     const size = await prismadb.size.updateMany({
       where: {
-        id: params.sizeId,
+        id: parameters.sizeId,
       },
       data: {
         name,
@@ -90,10 +92,11 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { sizeId: string; storeId: string } }
+  { params }: { params: { sizeId: string; storeId: string } },
 ) {
   try {
     const session = await auth();
+    const parameters = await params;
 
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -105,22 +108,22 @@ export async function DELETE(
       },
     });
 
-    if (!params.sizeId) {
+    if (!parameters.sizeId) {
       return new NextResponse('Billboard ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.userStore.findFirst({
       where: {
         userId: user?.id,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
     });
 
@@ -130,7 +133,7 @@ export async function DELETE(
 
     const size = await prismadb.size.deleteMany({
       where: {
-        id: params.sizeId,
+        id: parameters.sizeId,
       },
     });
 

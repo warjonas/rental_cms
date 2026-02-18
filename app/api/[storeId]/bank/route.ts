@@ -5,10 +5,11 @@ import { NextResponse } from 'next/server';
 
 export async function POST(
   req: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: { storeId: string } },
 ) {
   try {
     const session = await auth();
+    const parameters = await params;
 
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -40,7 +41,7 @@ export async function POST(
       return new NextResponse('Account Number is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
@@ -63,7 +64,7 @@ export async function POST(
         accountNo,
         store: {
           connect: {
-            id: params.storeId,
+            id: parameters.storeId,
           },
         },
       },
@@ -81,8 +82,10 @@ export async function POST(
 
 export async function GET(
   req: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: { storeId: string } },
 ) {
+  const parameters = await params;
+
   try {
     const { searchParams } = new URL(req.url);
     const categoryId = searchParams.get('categoryId') || undefined;
@@ -96,7 +99,7 @@ export async function GET(
 
     const products = await prismadb.product.findMany({
       where: {
-        storeId: params.storeId,
+        storeId: parameters.storeId,
         categoryId,
         colourId,
         sizeId,

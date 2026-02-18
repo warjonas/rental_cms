@@ -4,10 +4,11 @@ import { NextResponse } from 'next/server';
 
 export async function POST(
   req: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: { storeId: string } },
 ) {
   try {
     const session = await auth();
+    const parameters = await params;
 
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -61,14 +62,14 @@ export async function POST(
       });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.userStore.findFirst({
       where: {
         userId: user?.id,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
     });
 
@@ -109,7 +110,7 @@ export async function POST(
         },
         isFeatured,
         isArchived,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
         qty,
       },
     });
@@ -123,7 +124,7 @@ export async function POST(
 
 export async function GET(
   req: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: { storeId: string } },
 ) {
   try {
     const { searchParams } = new URL(req.url);

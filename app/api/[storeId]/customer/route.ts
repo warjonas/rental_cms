@@ -15,9 +15,10 @@ export async function OPTIONS() {
 
 export async function POST(
   req: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: { storeId: string } },
 ) {
   try {
+    const parameters = await params;
     const body = await req.json();
 
     const {
@@ -54,9 +55,13 @@ export async function POST(
       return new NextResponse('Last Name is required', { status: 400 });
     }
 
+    if (!parameters.storeId) {
+      return new NextResponse('Store Id Is required', { status: 400 });
+    }
+
     const customer = await prismadb.customer.create({
       data: {
-        storeId: params.storeId,
+        storeId: parameters.storeId,
         firstName,
         lastName,
         idNumber,
@@ -80,7 +85,7 @@ export async function POST(
 
 export async function GET(
   req: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: { storeId: string } },
 ) {
   try {
     if (!params.storeId) {

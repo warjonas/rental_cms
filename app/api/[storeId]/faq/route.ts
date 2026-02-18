@@ -4,9 +4,10 @@ import { auth } from '@/app/auth';
 
 export async function POST(
   req: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: { storeId: string } },
 ) {
   try {
+    const parameters = await params;
     const session = await auth();
 
     if (!session?.user?.email) {
@@ -31,13 +32,13 @@ export async function POST(
       return new NextResponse('Answer is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
-        id: params.storeId,
+        id: parameters.storeId,
         users: {
           some: {
             userId: user?.id,
@@ -54,7 +55,7 @@ export async function POST(
       data: {
         question,
         answer,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
     });
 
@@ -67,16 +68,17 @@ export async function POST(
 
 export async function GET(
   req: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: { storeId: string } },
 ) {
   try {
-    if (!params.storeId) {
+    const parameters = await params;
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const faqs = await prismadb.fAQ.findMany({
       where: {
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
     });
 

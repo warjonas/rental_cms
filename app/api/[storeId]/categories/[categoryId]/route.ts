@@ -1,20 +1,22 @@
 import { auth } from '@/app/auth';
 import prismadb from '@/lib/prismadb';
+import { Param } from '@prisma/client/runtime/client';
 
 import { NextResponse } from 'next/server';
 
 export async function GET(
   req: Request,
-  { params }: { params: { categoryId: string } }
+  { params }: { params: { categoryId: string } },
 ) {
   try {
-    if (!params.categoryId) {
+    const parameters = await params;
+    if (!parameters.categoryId) {
       return new NextResponse('Category ID is required', { status: 400 });
     }
 
     const category = await prismadb.category.findUnique({
       where: {
-        id: params.categoryId,
+        id: parameters.categoryId,
       },
       include: {
         billboard: true,
@@ -30,10 +32,11 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { categoryId: string; storeId: string } }
+  { params }: { params: { categoryId: string; storeId: string } },
 ) {
   try {
     const session = await auth();
+    const parameters = await params;
 
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -53,22 +56,22 @@ export async function PATCH(
       return new NextResponse('Category Name is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store is required', { status: 400 });
     }
 
-    if (!params.categoryId) {
+    if (!parameters.categoryId) {
       return new NextResponse('Category ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.userStore.findFirst({
       where: {
         userId: user?.id,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
     });
 
@@ -96,10 +99,11 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { categoryId: string; storeId: string } }
+  { params }: { params: { categoryId: string; storeId: string } },
 ) {
   try {
     const session = await auth();
+    const parameters = await params;
 
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -111,22 +115,22 @@ export async function DELETE(
       },
     });
 
-    if (!params.categoryId) {
+    if (!parameters.categoryId) {
       return new NextResponse('Category ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.userStore.findFirst({
       where: {
         userId: user?.id,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
     });
 
@@ -136,7 +140,7 @@ export async function DELETE(
 
     const category = await prismadb.category.deleteMany({
       where: {
-        id: params.categoryId,
+        id: parameters.categoryId,
       },
     });
 

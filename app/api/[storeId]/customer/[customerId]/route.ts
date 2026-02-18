@@ -1,6 +1,4 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import prismadb from '@/lib/prismadb';
-import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 
 const corsHeaders = {
@@ -16,17 +14,18 @@ export async function OPTIONS() {
 
 export async function GET(
   req: Request,
-  { params }: { params: { customerId: string } }
+  { params }: { params: { customerId: string } },
 ) {
   // Email is used as customerID in this function
   try {
+    const parameters = await params;
     if (!params.customerId) {
       return new NextResponse('Email Address is required', { status: 400 });
     }
 
     const customer = await prismadb.customer.findUnique({
       where: {
-        emailAddress: params.customerId,
+        emailAddress: parameters.customerId,
       },
     });
 
@@ -39,9 +38,10 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { customerId: string; storeId: string } }
+  { params }: { params: { customerId: string; storeId: string } },
 ) {
   try {
+    const paramaters = await params;
     const body = await req.json();
     const {
       phoneNumber,
@@ -72,17 +72,17 @@ export async function PATCH(
       return new NextResponse('Suburb is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!paramaters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
-    if (!params.customerId) {
+    if (!paramaters.customerId) {
       return new NextResponse('Billboard ID is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.userStore.findFirst({
       where: {
-        storeId: params.storeId,
+        storeId: paramaters.storeId,
       },
     });
 
@@ -92,7 +92,7 @@ export async function PATCH(
 
     const customer = await prismadb.customer.updateMany({
       where: {
-        emailAddress: params.customerId,
+        emailAddress: paramaters.customerId,
       },
       data: {
         personalAddressCity,
@@ -113,9 +113,10 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { customerId: string; storeId: string } }
+  { params }: { params: { customerId: string; storeId: string } },
 ) {
   try {
+    const parameters = await params;
     // const session = await getServerSession(authOptions);
 
     // if (!session?.user?.email) {
@@ -128,18 +129,27 @@ export async function DELETE(
     //   },
     // });
 
-    if (!params.customerId) {
-      return new NextResponse('Billboard ID is required', { status: 400 });
+    if (!parameters.customerId) {
+      return new NextResponse('Customer ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
+    }
+    const customerExist = await prismadb.customer.findFirst({
+      where: {
+        id: parameters.customerId,
+      },
+    });
+
+    if (!customerExist) {
+      return new NextResponse('Customer does not exist.', { status: 401 });
     }
 
     const storeByUserId = await prismadb.userStore.findFirst({
       where: {
         // userId: user?.id,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
     });
 
@@ -149,7 +159,7 @@ export async function DELETE(
 
     const customer = await prismadb.customer.deleteMany({
       where: {
-        emailAddress: params.customerId,
+        emailAddress: parameters.customerId,
       },
     });
 

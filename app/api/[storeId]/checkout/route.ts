@@ -18,9 +18,10 @@ export async function OPTIONS() {
 
 export async function POST(
   req: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: { storeId: string } },
 ) {
   const { values, products } = await req.json();
+  const parameters = await params;
   const items = products.items;
 
   if (!values.customer) {
@@ -102,7 +103,7 @@ export async function POST(
     const order = await prismadb.order.create({
       data: {
         id: orderId,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
         isPaid: values.isPaid,
         totalPrice: values.totalPrice,
         customerId: values.customer,

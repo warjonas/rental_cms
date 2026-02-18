@@ -7,16 +7,17 @@ import { NextResponse } from 'next/server';
 
 export async function GET(
   req: Request,
-  { params }: { params: { orderId: string } }
+  { params }: { params: { orderId: string } },
 ) {
   try {
-    if (!params.orderId) {
+    const parameters = await params;
+    if (!parameters.orderId) {
       return new NextResponse('Order ID is required', { status: 400 });
     }
 
     const Order = await prismadb.order.findUnique({
       where: {
-        id: params.orderId,
+        id: parameters.orderId,
       },
       include: {
         orderItems: true,
@@ -32,9 +33,10 @@ export async function GET(
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { quoteId: string; storeId: string } }
+  { params }: { params: { quoteId: string; storeId: string } },
 ) {
   try {
+    const parameters = await params;
     const session = await auth();
 
     const { values, products, customerId } = await req.json();
@@ -115,11 +117,11 @@ export async function PATCH(
         status: 400,
       });
     }
-    if (!params.quoteId) {
+    if (!parameters.quoteId) {
       return new NextResponse('Quote ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
@@ -127,7 +129,7 @@ export async function PATCH(
       const storeByUserId = await prismadb.userStore.findFirst({
         where: {
           userId: user?.id,
-          storeId: params.storeId,
+          storeId: parameters.storeId,
         },
       });
 
@@ -194,7 +196,7 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { orderId: string; storeId: string } }
+  { params }: { params: { orderId: string; storeId: string } },
 ) {
   try {
     const session = await auth();

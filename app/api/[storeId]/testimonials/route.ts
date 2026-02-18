@@ -4,10 +4,11 @@ import { NextResponse } from 'next/server';
 
 export async function POST(
   req: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: { storeId: string } },
 ) {
   try {
     const session = await auth();
+    const parameters = await params;
 
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -31,13 +32,13 @@ export async function POST(
       return new NextResponse('Message is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.store.findFirst({
       where: {
-        id: params.storeId,
+        id: parameters.storeId,
         users: {
           some: {
             userId: user?.id,
@@ -50,15 +51,15 @@ export async function POST(
       return new NextResponse('Unauthorized', { status: 403 });
     }
 
-    const billboard = await prismadb.testimonial.create({
+    const testimonial = await prismadb.testimonial.create({
       data: {
         clientName,
         message,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
     });
 
-    return NextResponse.json(billboard);
+    return NextResponse.json(testimonial);
   } catch (error) {
     console.log('[TESTIMONIAL_POST]', error);
     return new NextResponse('Internal Error', { status: 500 });
@@ -67,7 +68,7 @@ export async function POST(
 
 export async function GET(
   req: Request,
-  { params }: { params: { storeId: string } }
+  { params }: { params: { storeId: string } },
 ) {
   try {
     if (!params.storeId) {

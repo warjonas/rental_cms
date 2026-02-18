@@ -4,32 +4,34 @@ import { NextResponse } from 'next/server';
 
 export async function GET(
   req: Request,
-  { params }: { params: { faqId: string } }
+  { params }: { params: { faqId: string } },
 ) {
   try {
-    if (!params.faqId) {
-      return new NextResponse('Billboard ID is required', { status: 400 });
+    const parameters = await params;
+    if (!parameters.faqId) {
+      return new NextResponse('FAQ ID is required', { status: 400 });
     }
 
     const faq = await prismadb.fAQ.findUnique({
       where: {
-        id: params.faqId,
+        id: parameters.faqId,
       },
     });
 
     return NextResponse.json(faq);
   } catch (error) {
-    console.log('[BILLBOARD_GET]', error);
+    console.log('[FAQ_GET]', error);
     return new NextResponse('Internal Error', { status: 500 });
   }
 }
 
 export async function PATCH(
   req: Request,
-  { params }: { params: { faqId: string; storeId: string } }
+  { params }: { params: { faqId: string; storeId: string } },
 ) {
   try {
     const session = await auth();
+    const parameters = await params;
 
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -52,22 +54,22 @@ export async function PATCH(
       return new NextResponse('Answer is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
-    if (!params.faqId) {
-      return new NextResponse('Billboard ID is required', { status: 400 });
+    if (!parameters.faqId) {
+      return new NextResponse('FAQ ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.userStore.findFirst({
       where: {
         userId: user?.id,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
     });
 
@@ -77,7 +79,7 @@ export async function PATCH(
 
     const faq = await prismadb.fAQ.updateMany({
       where: {
-        id: params.faqId,
+        id: parameters.faqId,
       },
       data: {
         question,
@@ -94,10 +96,11 @@ export async function PATCH(
 
 export async function DELETE(
   req: Request,
-  { params }: { params: { faqId: string; storeId: string } }
+  { params }: { params: { faqId: string; storeId: string } },
 ) {
   try {
     const session = await auth();
+    const parameters = await params;
 
     if (!session?.user?.email) {
       return new NextResponse('Unauthorized', { status: 401 });
@@ -109,22 +112,22 @@ export async function DELETE(
       },
     });
 
-    if (!params.faqId) {
+    if (!parameters.faqId) {
       return new NextResponse('Billboard ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
-    if (!params.storeId) {
+    if (!parameters.storeId) {
       return new NextResponse('Store ID is required', { status: 400 });
     }
 
     const storeByUserId = await prismadb.userStore.findFirst({
       where: {
         userId: user?.id,
-        storeId: params.storeId,
+        storeId: parameters.storeId,
       },
     });
 
@@ -134,7 +137,7 @@ export async function DELETE(
 
     const faq = await prismadb.fAQ.deleteMany({
       where: {
-        id: params.faqId,
+        id: parameters.faqId,
       },
     });
 
