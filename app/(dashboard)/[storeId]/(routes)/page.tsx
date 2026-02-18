@@ -16,11 +16,12 @@ type Props = {
 };
 
 const DashboardPage: React.FC<Props> = async ({ params }) => {
-  const totalRevenue = await getTotalRevenue(params.storeId);
-  const salesCount = await getSalesCount(params.storeId);
-  const stockCount = await getStockCount(params.storeId);
+  const parameters = await params;
+  const totalRevenue = await getTotalRevenue(parameters.storeId);
+  const salesCount = await getSalesCount(parameters.storeId);
+  const stockCount = await getStockCount(parameters.storeId);
 
-  const graphRevenue = await getGraphRevenue(params.storeId);
+  const graphRevenue = await getGraphRevenue(parameters.storeId);
 
   return (
     <div className="flex-col">

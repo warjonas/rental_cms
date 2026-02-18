@@ -11,6 +11,7 @@ type Props = { children: React.ReactNode; params: { storeId: string } };
 
 async function DashBoardLayout({ children, params }: Props) {
   const session = await auth();
+  const { storeId } = await params;
 
   if (!session?.user?.email) {
     redirect('/sign-in');
@@ -20,7 +21,7 @@ async function DashBoardLayout({ children, params }: Props) {
 
   const store = await prismadb.userStore.findFirst({
     where: {
-      storeId: params.storeId,
+      storeId: storeId,
       userId: user?.id,
     },
   });
