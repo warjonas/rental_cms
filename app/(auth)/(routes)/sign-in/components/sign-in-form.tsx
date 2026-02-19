@@ -65,7 +65,7 @@ const SignInForm = () => {
   };
 
   return (
-    <div className="bg-white bg-opacity-10 text-primary h-[45vh] flex items-center justify-between flex-col p-10 rounded-md shadow-lg">
+    <div className="bg-white bg-opacity-10 text-primary h-1/2 flex items-center justify-between flex-col p-10 rounded-md shadow-lg">
       <div className="flex items-center justify-between mb-10 text-center">
         <Heading
           title="Sign In"
@@ -111,11 +111,11 @@ const SignInForm = () => {
               )}
             />
           </div>
-          <Separator className="my-5" />
-          <Button disabled={loading} className="ml-auto " type="submit">
+          <Separator />
+          <Button disabled={loading} className="w-full " type="submit">
             Log In
           </Button>
-          <Separator className="my-5" />
+          <Separator className="mb-5" />
           <p>
             Dont have an account? <a href="/register">Register Here</a>{' '}
           </p>
