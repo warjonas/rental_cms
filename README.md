@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+📘 Content Management System (CMS)
+Overview
+This Content Management System (CMS) is designed to streamline operations for businesses that manage products, rentals, and online storefronts.
+Originally built for a decor rental company, the system supports rental orders and product management. With minimal adjustments, it can be converted to support retail businesses that sell items directly.
+The CMS provides a centralized platform to manage product details, company information, and website visuals, ensuring efficiency and consistency across business operations.
 
-## Getting Started
+✨ Features
 
-First, run the development server:
+1. Product Management
+   - Add, edit, and delete products.
+   - Store detailed product information:
+   - Name & description
+   - Colours & variations
+   - Pricing (rental or sale)
+   - Availability status
+   - Upload product images for better customer engagement.
+   - Flexible enough to handle both rental items and retail products.
+2. Business Information Management
+   - Manage company details:
+   - Team members and roles
+   - Contact information
+   - Banking details for transactions
+   - Centralized storage ensures easy updates and consistency across the platform.
+3. Website Content Management
+   - Upload and manage billboard/hero images for the website.
+   - Control homepage visuals to align with promotions, branding, or seasonal campaigns.
+   - Simple interface for non-technical users to update site visuals.
+4. API Endpoints
+   - Custom API endpoints are exposed by the system.
+   - These allow seamless integration with the main customer-facing website.
+   - Developers can hook into product data, business details, and images for dynamic rendering.
+5. Business Dashboard
+   - Interactive dashboard displaying key business statistics.
+   - Track product performance, customer activity, and financial insights.
+   - Provides a quick overview for decision-making.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+🔧 Adaptability
+While the CMS is optimized for rental workflows, it can be adapted for sales-based businesses by: - Switching product availability logic from "rental period" to "stock quantity." - Adjusting pricing to reflect purchase costs instead of rental fees. - Updating order workflows to handle direct sales and shipping.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+🛠 Tech Stack - SQL – Cloud-hosted database clusters for scalable storage. - Next.js – Framework for modern web development. - TailwindCSS – Utility-first styling for responsive design. - AuthJS – Custom authentication and user management. - Hosting – Currently deployed on Vercel, ensuring seamless integration with Next.js.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+🛠 Future Enhancements - Integration with payment gateways for direct sales. - Inventory tracking for retail businesses. - Analytics dashboard for deeper product and customer insights. - Multi-language and multi-currency support.
