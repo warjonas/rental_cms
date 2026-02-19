@@ -1,4 +1,5 @@
 📘 Content Management System (CMS)
+
 Overview
 This Content Management System (CMS) is designed to streamline operations for businesses that manage products, rentals, and online storefronts.
 Originally built for a decor rental company, the system supports rental orders and product management. With minimal adjustments, it can be converted to support retail businesses that sell items directly.
