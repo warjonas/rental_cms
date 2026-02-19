@@ -1,4 +1,5 @@
 📘 Content Management System (CMS)
+
 Overview
 This Content Management System (CMS) is designed to streamline operations for businesses that manage products, rentals, and online storefronts.
 Originally built for a decor rental company, the system supports rental orders and product management. With minimal adjustments, it can be converted to support retail businesses that sell items directly.
@@ -35,8 +36,21 @@ The CMS provides a centralized platform to manage product details, company infor
    - Provides a quick overview for decision-making.
 
 🔧 Adaptability
-While the CMS is optimized for rental workflows, it can be adapted for sales-based businesses by: - Switching product availability logic from "rental period" to "stock quantity." - Adjusting pricing to reflect purchase costs instead of rental fees. - Updating order workflows to handle direct sales and shipping.
 
-🛠 Tech Stack - SQL – Cloud-hosted database clusters for scalable storage. - Next.js – Framework for modern web development. - TailwindCSS – Utility-first styling for responsive design. - AuthJS – Custom authentication and user management. - Hosting – Currently deployed on Vercel, ensuring seamless integration with Next.js.
+While the CMS is optimized for rental workflows, it can be adapted for sales-based businesses by: 
+- Switching product availability logic from "rental period" to "stock quantity."
+- Adjusting pricing to reflect purchase costs instead of rental fees.
+- Updating order workflows to handle direct sales and shipping.
 
-🛠 Future Enhancements - Integration with payment gateways for direct sales. - Inventory tracking for retail businesses. - Analytics dashboard for deeper product and customer insights. - Multi-language and multi-currency support.
+🛠 Tech Stack 
+- SQL Database- Hosted on Cloud clusters for scalable storage.
+- Next.js – Framework for modern web development.
+- TailwindCSS – Utility-first styling for responsive design.
+- AuthJS - Custom authentication and user management.
+- Hosting – Currently deployed on Vercel, ensuring seamless integration with Next.js.
+
+🛠 Future Enhancements 
+- Integration with payment gateways for direct sales.
+- Inventory tracking for retail businesses.
+- Analytics dashboard for deeper product and customer insights.
+- Multi-language and multi-currency support.
