@@ -4,9 +4,10 @@ import prismadb from '@/lib/prismadb';
 import { MemberColumn } from './components/columns';
 
 const MembersPage = async ({ params }: { params: { storeId: string } }) => {
+  const parameters = await params;
   const members = await prismadb.teamMembers.findMany({
     where: {
-      storeId: params.storeId,
+      storeId: parameters.storeId,
     },
   });
 

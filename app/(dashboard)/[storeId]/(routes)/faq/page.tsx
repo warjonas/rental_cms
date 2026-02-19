@@ -4,9 +4,10 @@ import prismadb from '@/lib/prismadb';
 import { FaqColumn } from './components/columns';
 
 const FaqsPage = async ({ params }: { params: { storeId: string } }) => {
+  const parameters = await params;
   const faqs = await prismadb.fAQ.findMany({
     where: {
-      storeId: params.storeId,
+      storeId: parameters.storeId,
     },
   });
 

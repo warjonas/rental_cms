@@ -8,9 +8,10 @@ const TestimonialsPage = async ({
 }: {
   params: { storeId: string };
 }) => {
+  const parameters = await params;
   const testimonials = await prismadb.testimonial.findMany({
     where: {
-      storeId: params.storeId,
+      storeId: parameters.storeId,
     },
   });
 
@@ -19,7 +20,7 @@ const TestimonialsPage = async ({
       id: item.id,
       clientName: item.clientName,
       message: item.message,
-    })
+    }),
   );
   return (
     <div className="flex-col">

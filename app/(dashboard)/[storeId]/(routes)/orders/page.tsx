@@ -10,7 +10,8 @@ import { getCurrentUser } from '@/actions/getCurrentUser';
 export const revalidate = false;
 
 const OrderPage = async ({ params }: { params: { storeId: string } }) => {
-  const orders = await getOrders(params.storeId);
+  const parameters = await params;
+  const orders = await getOrders(parameters.storeId);
   const user = await getCurrentUser();
 
   // formatter.format(

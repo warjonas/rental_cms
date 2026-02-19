@@ -6,9 +6,11 @@ import { formatter } from '@/lib/utils';
 import { getCurrentUser } from '@/actions/getCurrentUser';
 
 const ProductsPage = async ({ params }: { params: { storeId: string } }) => {
+  const parameters = await params;
+
   const products = await prismadb.product.findMany({
     where: {
-      storeId: params.storeId,
+      storeId: parameters.storeId,
     },
     include: {
       colour: true,

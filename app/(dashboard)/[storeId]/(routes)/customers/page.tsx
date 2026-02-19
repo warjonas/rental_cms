@@ -7,9 +7,10 @@ import { Suspense } from 'react';
 import Loading from './loading';
 
 const CustomersPage = async ({ params }: { params: { storeId: string } }) => {
+  const parameters = await params;
   const customers = await prismadb.customer.findMany({
     where: {
-      storeId: params.storeId,
+      storeId: parameters.storeId,
     },
     orderBy: {
       created: 'desc',

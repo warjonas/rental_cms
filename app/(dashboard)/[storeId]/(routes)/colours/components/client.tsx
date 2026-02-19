@@ -31,7 +31,7 @@ export const ColourClient: React.FC<ColourClientProps> = ({ data }) => {
         </Button>
       </div>
       <Separator className="my-4" />
-      <DataTable columns={columns} data={data} searchKey="label" />
+      <DataTable columns={columns} data={data} searchKey="name" />
       <Heading title="API" description="API Calls for colours" />
       <Separator className="my-4" />
 
